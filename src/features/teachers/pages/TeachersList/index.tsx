@@ -56,6 +56,8 @@ const TeachersList: FC = () => {
         id: record?.id,
         name: record?.name ?? '-',
         group: record?.group ?? '-',
+        user: record?.user,
+        email: record?.email ?? '-',
         discipline: record?.discipline ?? '-'
     }))
 
@@ -63,6 +65,10 @@ const TeachersList: FC = () => {
         {
             title: 'ФИО',
             dataIndex: 'name'
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email'
         },
         {
             title: 'Группа',

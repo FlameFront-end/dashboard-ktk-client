@@ -137,8 +137,10 @@ declare namespace Collections {
     interface Teacher {
         id: string
         name: string
+        email: string
         discipline: string
         group: string | null
+        user: User
     }
 
     interface Student {

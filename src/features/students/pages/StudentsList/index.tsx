@@ -73,16 +73,16 @@ const StudentsList: FC = () => {
             dataIndex: 'group'
         },
         {
+            title: 'Email',
+            dataIndex: 'email'
+        },
+        {
             title: 'Дата рождения',
             dataIndex: 'birthDate'
         },
         {
             title: 'Телефон',
             dataIndex: 'phone'
-        },
-        {
-            title: 'Почта',
-            dataIndex: 'email'
         },
         {
             title: 'Действия',

@@ -33,7 +33,7 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
         try {
             if (teacher) {
                 await updateTeacher({ id: teacher.id, ...values }).unwrap()
-                void message.success('Преподаватель успешно изменён')
+                void message.success('Данные для входа отправлены студенту на почту')
             } else {
                 await createTeacher(values).unwrap()
                 void message.success('Преподаватель успешно создан')
@@ -42,11 +42,15 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
             form.resetFields()
             onSuccess()
             onClose()
-        } catch (error) {
+        } catch (error: any) {
             if (teacher) {
                 void message.error('Ошибка при редактировании преподавателя')
             } else {
-                void message.error('Ошибка при создании преподавателя')
+                if (error.data.message === 'Эта почта уже занята') {
+                    void message.error('Эта почта уже занята')
+                } else {
+                    void message.error('Ошибка при создании преподавателя')
+                }
             }
         }
     }
@@ -71,6 +75,13 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                     rules={[{ required: true, message: 'Введите ФИО' }]}
                 >
                     <Input placeholder="Введите ФИО" />
+                </Form.Item>
+                <Form.Item
+                    name="email"
+                    label="Email"
+                    rules={[{ required: true, message: 'Введите email' }]}
+                >
+                    <Input type='email' placeholder="Введите email" />
                 </Form.Item>
                 <Form.Item
                     name="discipline"

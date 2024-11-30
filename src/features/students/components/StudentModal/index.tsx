@@ -50,11 +50,15 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
             form.resetFields()
             onSuccess()
             onClose()
-        } catch (error) {
+        } catch (error: any) {
             if (student) {
                 void message.error('Ошибка при редактировании студента')
             } else {
-                void message.error('Ошибка при создании студента')
+                if (error.data.message === 'Эта почта уже занята') {
+                    void message.error('Эта почта уже занята')
+                } else {
+                    void message.error('Ошибка при создании преподавателя')
+                }
             }
         }
     }
@@ -81,6 +85,13 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
                     <Input placeholder="Введите ФИО" />
                 </Form.Item>
                 <Form.Item
+                    name="email"
+                    label="Email"
+                    rules={[{ required: true, message: 'Введите email' }]}
+                >
+                    <Input type='email' placeholder="Введите email" />
+                </Form.Item>
+                <Form.Item
                     name="group"
                     label="Группа"
                     rules={[{ required: true, message: 'Введите группу' }]}
@@ -103,12 +114,6 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
                     label="Номер телефона"
                 >
                     <Input type='phone' placeholder="Введите номер телефона" />
-                </Form.Item>
-                <Form.Item
-                    name="email"
-                    label="Email"
-                >
-                    <Input type='email' placeholder="Введите email" />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={isLoadingCreate || isLoadingUpdate}>
