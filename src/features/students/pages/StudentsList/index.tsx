@@ -1,5 +1,4 @@
-import type React from 'react'
-import { useState } from 'react'
+import { type FC, useState } from 'react'
 import { Table, Input, Space, Button, message } from 'antd'
 import { StyledStudentsListWrapper } from './StudentsList.styled'
 import { useDeleteStudentMutation, useGetAllStudentsQuery } from '../../api/students.api.ts'
@@ -8,7 +7,7 @@ import { getDateFormat } from '@/utils'
 import StudentModal from '../../components/StudentModal'
 import { EditOutlined } from '@ant-design/icons'
 
-const StudentsList: React.FC = () => {
+const StudentsList: FC = () => {
     const { data: students, isLoading, refetch } = useGetAllStudentsQuery()
     const [deleteStudent] = useDeleteStudentMutation()
 
@@ -58,13 +57,11 @@ const StudentsList: React.FC = () => {
         id: record?.id,
         name: record?.name ?? '-',
         group: record?.group ?? '-',
+        user: record.user,
         birthDate: getDateFormat(record?.birthDate) ?? '-',
         phone: record?.phone ?? '-',
-        email: record?.email ?? '-',
-        username: record?.user.username
+        email: record?.email ?? '-'
     }))
-
-    console.log('students', students)
 
     const columns = [
         {
@@ -88,18 +85,14 @@ const StudentsList: React.FC = () => {
             dataIndex: 'email'
         },
         {
-            title: 'Имя пользователя',
-            dataIndex: 'username'
-        },
-        {
             title: 'Действия',
-            render: (_: any, student: Collections.Student) => (
+            render: (_: any, record: Collections.Student) => (
                 <Space>
-                    <Button onClick={() => { handleEdit(student) }}>
+                    <Button onClick={() => { handleEdit(record) }}>
                         <EditOutlined />
                     </Button>
                     <ConfirmDelete
-                        handleDelete={async () => { await handleDelete(student.id) }}
+                        handleDelete={async () => { await handleDelete(record.id) }}
                         title='Вы уверены, что хотите удалить этого студента?'
                     />
                 </Space>

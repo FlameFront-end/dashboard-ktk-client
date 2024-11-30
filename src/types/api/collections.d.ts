@@ -145,10 +145,10 @@ declare namespace Collections {
         id: string
         name: string
         group: string
+        user: User
         birthDate?: string
         phone?: string
         email?: string
-        user: User
     }
 
     interface User {
