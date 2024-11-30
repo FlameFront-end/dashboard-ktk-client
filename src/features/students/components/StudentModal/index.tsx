@@ -43,7 +43,7 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
                 void message.success('Студент успешно изменён')
             } else {
                 await createStudent(values).unwrap()
-                void message.success('Студент успешно создан')
+                void message.success('Данные для входа отправлены студенту на почту')
             }
 
             void refetch()

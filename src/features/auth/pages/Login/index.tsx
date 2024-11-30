@@ -1,17 +1,16 @@
 import { type FC, useEffect } from 'react'
 import { Button, Form, Input } from 'antd'
-import { regExpPassword } from '@/utils'
 import { useAppAction } from '@/hooks'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { useLoginMutation } from '../../api/auth.api'
 import type { LoginPayload } from '../../types/login.types'
-import { authPaths } from '../../routes/auth.paths.ts'
 import { BACKEND_URL } from '@/constants'
-import { Card, TextButton } from '@/kit'
+import { Card } from '@/kit'
 
 import { StyledAuthWrapper } from '../styled/Auth.styled.tsx'
+import { pathsConfig } from '@/pathsConfig'
 
 const Login: FC = () => {
     const navigate = useNavigate()
@@ -44,6 +43,7 @@ const Login: FC = () => {
             setUser(result)
             form.resetFields()
             toast.success('Успешный вход в аккаунт')
+            navigate(pathsConfig.group_list)
         } else {
             toast.error('Что-то пошло не так')
         }
@@ -86,8 +86,6 @@ const Login: FC = () => {
                                 validator: async (_, value) => {
                                     if (value === undefined || value === '') {
                                         await Promise.reject(new Error('Please input your password!'))
-                                    } else if (!regExpPassword.test(value)) {
-                                        await Promise.reject(new Error('The password must be at least 9 characters and contain capital letters, numbers and special characters, such as "#@&".'))
                                     }
                                 }
                             }
@@ -102,9 +100,9 @@ const Login: FC = () => {
                         </Button>
                     </Form.Item>
 
-                    <label>
-                        Ещё не зарегстрированы? <TextButton onClick={() => { navigate(authPaths.register) }}>Регистрация</TextButton>
-                    </label>
+                    {/* <label> */}
+                    {/*     Ещё не зарегстрированы? <TextButton onClick={() => { navigate(authPaths.register) }}>Регистрация</TextButton> */}
+                    {/* </label> */}
                 </Form>
             </Card>
         </StyledAuthWrapper>

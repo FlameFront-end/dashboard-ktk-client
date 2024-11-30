@@ -148,5 +148,17 @@ declare namespace Collections {
         birthDate?: string
         phone?: string
         email?: string
+        user: User
+    }
+
+    interface User {
+        birthdate: string
+        createdAt: string
+        email: string
+        id: string
+        isAdmin: boolean
+        password: string
+        updatedAt: string
+        username: string
     }
 }

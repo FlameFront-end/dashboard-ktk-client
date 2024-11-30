@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import { App, Layout } from 'antd'
+import { Layout } from 'antd'
 
 export const StyledLayout = styled(Layout)`
     min-height: 100vh;
-    max-width: calc(920px + 200px + 50px);
+    max-width: calc(1120px + 200px + 50px);
     display: flex;
     gap: 16px;
     background-color: #141414;
@@ -12,10 +12,6 @@ export const StyledLayout = styled(Layout)`
     @media screen and (max-width: 800px) {
         padding-bottom: 0;
     }
-`
-
-export const StyledApp = styled(App)`
-
 `
 
 export const StyledContent = styled(Layout.Content)`

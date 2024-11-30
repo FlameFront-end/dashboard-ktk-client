@@ -60,8 +60,11 @@ const StudentsList: React.FC = () => {
         group: record?.group ?? '-',
         birthDate: getDateFormat(record?.birthDate) ?? '-',
         phone: record?.phone ?? '-',
-        email: record?.email ?? '-'
+        email: record?.email ?? '-',
+        username: record?.user.username
     }))
+
+    console.log('students', students)
 
     const columns = [
         {
@@ -83,6 +86,10 @@ const StudentsList: React.FC = () => {
         {
             title: 'Почта',
             dataIndex: 'email'
+        },
+        {
+            title: 'Имя пользователя',
+            dataIndex: 'username'
         },
         {
             title: 'Действия',

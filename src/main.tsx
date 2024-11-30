@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
-import { ConfigProvider, message } from 'antd'
+import { App, ConfigProvider, message } from 'antd'
 import { ThemeProvider } from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import dayjs from 'dayjs'
@@ -9,7 +9,6 @@ import ru_RU from 'antd/lib/locale/ru_RU'
 
 import reportWebVitals from './reportWebVitals'
 import RouterProvider from './router/RouterProvider'
-import { StyledApp } from './containers/Layout/Layout.styled.tsx'
 import { store } from './store/configureStore.ts'
 import { darkTheme, antdTheme } from '@/core'
 
@@ -33,10 +32,10 @@ root.render(
     <Provider store={store}>
         <ThemeProvider theme={darkTheme}>
             <ConfigProvider theme={antdTheme} locale={ru_RU}>
-                <StyledApp>
+                <App>
                     <ToastContainer autoClose={2000} theme='dark'/>
                     <RouterProvider />
-                </StyledApp>
+                </App>
             </ConfigProvider>
         </ThemeProvider>
     </Provider>
