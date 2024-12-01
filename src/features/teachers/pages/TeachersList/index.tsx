@@ -1,10 +1,18 @@
-import { type FC, useState } from 'react'
+import { type FC, type ReactNode, useState } from 'react'
 import { Table, Input, Space, Button, message } from 'antd'
 import { useDeleteTeacherByIdMutation, useGetAllTeachersQuery } from '../../api/teachers.api.ts'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import { StyledTeachersListWrapper } from './TeachersList.styled.tsx'
 import TeacherModal from '../../components/TeacherModal'
 import { EditOutlined } from '@ant-design/icons'
+
+interface DataSource {
+    id: string
+    name: string
+    group: string
+    email: string
+    discipline: string
+}
 
 const TeachersList: FC = () => {
     const { data: teachers, isLoading, refetch } = useGetAllTeachersQuery()
@@ -41,7 +49,7 @@ const TeachersList: FC = () => {
 
         const filtered = teachers?.filter((teacher: Collections.Teacher) =>
             teacher.name.toLowerCase().includes(lowercasedValue) ||
-            teacher.group.name.toLowerCase().includes(lowercasedValue)
+            teacher.group?.name.toLowerCase().includes(lowercasedValue)
         )
 
         setFilteredData(filtered ?? [])
@@ -52,13 +60,33 @@ const TeachersList: FC = () => {
         setIsModalVisible(true)
     }
 
-    const dataSource = (searchText ? filteredData : teachers)?.map(record => ({
-        id: record?.id,
-        name: record?.name ?? '-',
-        group: record?.group.name ?? '-',
-        email: record?.email ?? '-',
-        discipline: record?.discipline ?? '-'
-    }))
+    function renderActions(record: DataSource): ReactNode {
+        const teacher = teachers?.find(t => t.id === record.id)
+
+        if (!teacher) {
+            return null
+        }
+
+        return (
+            <Space>
+                <Button onClick={() => { handleEdit(teacher) }}>
+                    <EditOutlined />
+                </Button>
+                <ConfirmDelete
+                    handleDelete={async () => { await handleDelete(teacher.id) }}
+                    title='Вы уверены, что хотите удалить этого преподавателя?'
+                />
+            </Space>
+        )
+    }
+
+    const dataSource: DataSource[] = (searchText ? filteredData : teachers)?.map(record => ({
+        id: record.id,
+        name: record.name,
+        group: record.group?.name ?? '-',
+        email: record.email,
+        discipline: record.discipline
+    })) ?? []
 
     const columns = [
         {
@@ -79,17 +107,7 @@ const TeachersList: FC = () => {
         },
         {
             title: 'Действия',
-            render: (_: any, teacher: Collections.Teacher) => (
-                <Space>
-                    <Button onClick={() => { handleEdit(teacher) }}>
-                        <EditOutlined />
-                    </Button>
-                    <ConfirmDelete
-                        handleDelete={async () => { await handleDelete(teacher.id) }}
-                        title='Вы уверены, что хотите удалить этого преподавателя?'
-                    />
-                </Space>
-            )
+            render: renderActions
         }
     ]
 
@@ -110,7 +128,7 @@ const TeachersList: FC = () => {
                     </Button>
                 </div>
             </Space>
-            <Table
+            <Table<DataSource>
                 columns={columns}
                 dataSource={dataSource}
                 pagination={{ pageSize: 5 }}

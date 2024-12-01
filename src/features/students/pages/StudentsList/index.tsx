@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react'
+import { type FC, type ReactNode, useState } from 'react'
 import { Table, Input, Space, Button, message } from 'antd'
 import { StyledStudentsListWrapper } from './StudentsList.styled'
 import { useDeleteStudentMutation, useGetAllStudentsQuery } from '../../api/students.api.ts'
@@ -6,6 +6,15 @@ import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import { getDateFormat } from '@/utils'
 import StudentModal from '../../components/StudentModal'
 import { EditOutlined } from '@ant-design/icons'
+
+interface DataSource {
+    id: string
+    name: string
+    group: string
+    birthDate: string
+    phone: string
+    email: string
+}
 
 const StudentsList: FC = () => {
     const { data: students, isLoading, refetch } = useGetAllStudentsQuery()
@@ -53,16 +62,34 @@ const StudentsList: FC = () => {
         setIsModalVisible(true)
     }
 
-    const dataSource = (searchText ? filteredData : students)?.map(record => ({
-        id: record?.id,
+    function renderActions(record: DataSource): ReactNode {
+        const student = students?.find(item => item.id === record.id)
+
+        if (!student) {
+            return null
+        }
+
+        return (
+            <Space>
+                <Button onClick={() => { handleEdit(student) }}>
+                    <EditOutlined />
+                </Button>
+                <ConfirmDelete
+                    handleDelete={async () => { await handleDelete(student.id) }}
+                    title='Вы уверены, что хотите удалить этого студента?'
+                />
+            </Space>
+        )
+    }
+
+    const dataSource: DataSource[] = (searchText ? filteredData : students)?.map(record => ({
+        id: record?.id ?? '-',
         name: record?.name ?? '-',
         group: record?.group.name ?? '-',
         birthDate: getDateFormat(record?.birthDate) ?? '-',
         phone: record?.phone ?? '-',
-        email: record?.email ?? '-',
-        createdAt: record?.createdAt ?? '-',
-        updatedAt: record?.updatedAt ?? '-'
-    }))
+        email: record?.email ?? '-'
+    })) ?? []
 
     const columns = [
         {
@@ -87,17 +114,7 @@ const StudentsList: FC = () => {
         },
         {
             title: 'Действия',
-            render: (_: any, record: Collections.Student) => (
-                <Space>
-                    <Button onClick={() => { handleEdit(record) }}>
-                        <EditOutlined />
-                    </Button>
-                    <ConfirmDelete
-                        handleDelete={async () => { await handleDelete(record.id) }}
-                        title='Вы уверены, что хотите удалить этого студента?'
-                    />
-                </Space>
-            )
+            render: renderActions
         }
     ]
 
@@ -118,7 +135,7 @@ const StudentsList: FC = () => {
                     </Button>
                 </div>
             </Space>
-            <Table
+            <Table<DataSource>
                 columns={columns}
                 dataSource={dataSource}
                 pagination={{ pageSize: 5 }}

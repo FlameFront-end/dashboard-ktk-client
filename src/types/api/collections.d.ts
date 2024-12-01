@@ -148,7 +148,7 @@ declare namespace Collections {
         name: string
         email: string
         discipline: string
-        group: SimpleGroup
+        group: SimpleGroup | null
         createdAt: string
         updatedAt: string
     }

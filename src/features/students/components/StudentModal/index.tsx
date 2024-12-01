@@ -25,14 +25,13 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
 
     useEffect(() => {
         if (student) {
-            const { birthDate, ...studentWithoutBirthDate } = student
-
-            const formattedStudent = {
-                ...studentWithoutBirthDate,
-                birthDate: birthDate ? dayjs(birthDate, 'DD.MM.YYYY') : null
+            const formattedData = {
+                ...student,
+                group: student.group?.id,
+                birthDate: student.birthDate ? dayjs(student.birthDate, 'DD.MM.YYYY') : null
             }
 
-            form.setFieldsValue(formattedStudent)
+            form.setFieldsValue(formattedData)
         } else {
             form.resetFields()
         }
@@ -40,11 +39,16 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
 
     const handleSubmit = async (values: StudentCreatePayload): Promise<void> => {
         try {
+            const formattedValues: StudentCreatePayload = { ...values }
+            if (values.birthDate) {
+                formattedValues.birthDate = dayjs(values.birthDate).format('DD.MM.YYYY')
+            }
+
             if (student) {
-                await updateStudent({ id: student.id, ...values }).unwrap()
+                await updateStudent({ id: student.id, ...formattedValues }).unwrap()
                 void message.success('Студент успешно изменён')
             } else {
-                await createStudent(values).unwrap()
+                await createStudent(formattedValues).unwrap()
                 void message.success('Данные для входа отправлены студенту на почту')
             }
 

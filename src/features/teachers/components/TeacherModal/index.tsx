@@ -25,7 +25,12 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
 
     useEffect(() => {
         if (teacher) {
-            form.setFieldsValue(teacher)
+            const formattedData = {
+                ...teacher,
+                group: teacher.group?.id
+            }
+
+            form.setFieldsValue(formattedData)
         } else {
             form.resetFields()
         }
