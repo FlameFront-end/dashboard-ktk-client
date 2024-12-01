@@ -130,27 +130,38 @@ declare namespace Collections {
         teacher: Teacher
         students: Student[]
         schedule: Schedule
+        createdAt: string
+        updatedAt: string
     }
 
     type GroupedCourses = Array<[string, Group[]]>
+
+    interface SimpleGroup {
+        id: string
+        name: string
+        createdAt: string
+        updatedAt: string
+    }
 
     interface Teacher {
         id: string
         name: string
         email: string
         discipline: string
-        group: string | null
-        user: User
+        group: SimpleGroup
+        createdAt: string
+        updatedAt: string
     }
 
     interface Student {
         id: string
         name: string
-        group: string
-        user: User
+        email: string
+        group: SimpleGroup
         birthDate?: string
         phone?: string
-        email?: string
+        createdAt: string
+        updatedAt: string
     }
 
     interface User {

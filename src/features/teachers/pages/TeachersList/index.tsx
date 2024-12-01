@@ -41,7 +41,7 @@ const TeachersList: FC = () => {
 
         const filtered = teachers?.filter((teacher: Collections.Teacher) =>
             teacher.name.toLowerCase().includes(lowercasedValue) ||
-            teacher.group?.toLowerCase().includes(lowercasedValue)
+            teacher.group.name.toLowerCase().includes(lowercasedValue)
         )
 
         setFilteredData(filtered ?? [])
@@ -55,8 +55,7 @@ const TeachersList: FC = () => {
     const dataSource = (searchText ? filteredData : teachers)?.map(record => ({
         id: record?.id,
         name: record?.name ?? '-',
-        group: record?.group ?? '-',
-        user: record?.user,
+        group: record?.group.name ?? '-',
         email: record?.email ?? '-',
         discipline: record?.discipline ?? '-'
     }))
@@ -67,16 +66,16 @@ const TeachersList: FC = () => {
             dataIndex: 'name'
         },
         {
-            title: 'Email',
-            dataIndex: 'email'
-        },
-        {
             title: 'Группа',
             dataIndex: 'group'
         },
         {
             title: 'Предмет',
             dataIndex: 'discipline'
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email'
         },
         {
             title: 'Действия',

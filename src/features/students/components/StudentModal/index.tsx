@@ -1,5 +1,5 @@
 import { type FC, useEffect } from 'react'
-import { Button, DatePicker, Input, Modal, Form, message } from 'antd'
+import { Button, DatePicker, Input, Modal, Form, message, Select } from 'antd'
 import {
     type StudentCreatePayload,
     useCreateStudentMutation,
@@ -7,6 +7,7 @@ import {
     useUpdateStudentMutation
 } from '../../api/students.api.ts'
 import dayjs from 'dayjs'
+import { useGetAllGroupsQuery } from '../../../groups/api/groups.api.ts'
 
 interface Props {
     open: boolean
@@ -17,6 +18,7 @@ interface Props {
 
 const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
     const [form] = Form.useForm()
+    const { data: groups } = useGetAllGroupsQuery()
     const [createStudent, { isLoading: isLoadingCreate }] = useCreateStudentMutation()
     const [updateStudent, { isLoading: isLoadingUpdate }] = useUpdateStudentMutation()
     const { refetch } = useGetAllStudentsQuery()
@@ -54,7 +56,7 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
             if (student) {
                 void message.error('Ошибка при редактировании студента')
             } else {
-                if (error.data.message === 'Эта почта уже занята') {
+                if (error.data.message === 'User with this email already exists') {
                     void message.error('Эта почта уже занята')
                 } else {
                     void message.error('Ошибка при создании преподавателя')
@@ -94,9 +96,19 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
                 <Form.Item
                     name="group"
                     label="Группа"
-                    rules={[{ required: true, message: 'Введите группу' }]}
+                    rules={[{ required: true, message: 'Выберите хотя бы одного студента' }]}
                 >
-                    <Input placeholder="Введите группу" />
+                    <Select
+                        placeholder="Выберите группу"
+                        showSearch
+                        filterOption={(input, option) =>
+                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={groups?.map((group) => ({
+                            value: group.id,
+                            label: group.name
+                        }))}
+                    />
                 </Form.Item>
                 <Form.Item
                     name="birthDate"

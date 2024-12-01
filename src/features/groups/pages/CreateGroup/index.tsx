@@ -100,7 +100,6 @@ const CreateGroup: FC = () => {
                 <Form.Item
                     name="students"
                     label="Студенты"
-                    rules={[{ required: true, message: 'Выберите хотя бы одного студента' }]}
                 >
                     <Select
                         mode="multiple"

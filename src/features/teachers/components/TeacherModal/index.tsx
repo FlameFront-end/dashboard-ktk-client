@@ -1,11 +1,12 @@
 import { type FC, useEffect } from 'react'
-import { Button, Input, Modal, Form, message } from 'antd'
+import { Button, Input, Modal, Form, message, Select } from 'antd'
 import {
     type TeacherCreatePayload,
     useCreateTeacherMutation,
     useGetAllTeachersQuery,
     useUpdateTeacherMutation
 } from '../../api/teachers.api.ts'
+import { useGetAllGroupsQuery } from '../../../groups/api/groups.api.ts'
 
 interface Props {
     open: boolean
@@ -16,6 +17,7 @@ interface Props {
 
 const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
     const [form] = Form.useForm()
+    const { data: groups } = useGetAllGroupsQuery()
     const [createTeacher, { isLoading: isLoadingCreate }] = useCreateTeacherMutation()
     const [updateTeacher, { isLoading: isLoadingUpdate }] = useUpdateTeacherMutation()
 
@@ -33,10 +35,10 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
         try {
             if (teacher) {
                 await updateTeacher({ id: teacher.id, ...values }).unwrap()
-                void message.success('Данные для входа отправлены студенту на почту')
+                void message.success('Преподаватель успешно изменён')
             } else {
                 await createTeacher(values).unwrap()
-                void message.success('Преподаватель успешно создан')
+                void message.success('Данные для входа отправлены преподавателю на почту')
             }
             void refetch()
             form.resetFields()
@@ -46,7 +48,7 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
             if (teacher) {
                 void message.error('Ошибка при редактировании преподавателя')
             } else {
-                if (error.data.message === 'Эта почта уже занята') {
+                if (error.data.message === 'User with this email already exists') {
                     void message.error('Эта почта уже занята')
                 } else {
                     void message.error('Ошибка при создании преподавателя')
@@ -94,7 +96,17 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                     name="group"
                     label="Группа"
                 >
-                    <Input placeholder="Введите группу" />
+                    <Select
+                        placeholder="Выберите группу"
+                        showSearch
+                        filterOption={(input, option) =>
+                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={groups?.map((group) => ({
+                            value: group.id,
+                            label: group.name
+                        }))}
+                    />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={isLoadingCreate || isLoadingUpdate}>
