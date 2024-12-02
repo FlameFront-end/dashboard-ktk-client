@@ -85,7 +85,7 @@ const TeachersList: FC = () => {
         name: record.name,
         group: record.group?.name ?? '-',
         email: record.email,
-        discipline: record.discipline
+        discipline: record.discipline.name
     })) ?? []
 
     const columns = [

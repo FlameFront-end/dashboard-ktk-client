@@ -1,18 +1,16 @@
-import { FC} from 'react'
+import { type FC } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { FloatButton } from 'antd'
 import { useAuth } from '../features/auth/hooks/useAuth'
 import MobileNavBottom from '../components/MobileNavBottom'
-import {  useAppSelector } from '@/hooks'
+import { useAppSelector } from '@/hooks'
 import { pathsConfig } from '@/pathsConfig'
 
-
-const RouterProtect: FC = ()=> {
+const RouterProtect: FC = () => {
     const { isAuth } = useAuth()
     const { pathname } = useLocation()
 
     const userData = useAppSelector(state => state.auth.user)
-
 
     if (!isAuth && (pathname !== pathsConfig.login && pathname !== pathsConfig.register)) {
         return <Navigate to={pathsConfig.login} replace />

@@ -7,6 +7,7 @@ import {
     useUpdateTeacherMutation
 } from '../../api/teachers.api.ts'
 import { useGetAllGroupsQuery } from '../../../groups/api/groups.api.ts'
+import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
 
 interface Props {
     open: boolean
@@ -18,6 +19,8 @@ interface Props {
 const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
     const [form] = Form.useForm()
     const { data: groups } = useGetAllGroupsQuery()
+    const { data: disciplines } = useGetAllDisciplinesQuery()
+
     const [createTeacher, { isLoading: isLoadingCreate }] = useCreateTeacherMutation()
     const [updateTeacher, { isLoading: isLoadingUpdate }] = useUpdateTeacherMutation()
 
@@ -27,7 +30,8 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
         if (teacher) {
             const formattedData = {
                 ...teacher,
-                group: teacher.group?.id
+                group: teacher.group?.id,
+                discipline: teacher.discipline?.id
             }
 
             form.setFieldsValue(formattedData)
@@ -95,7 +99,17 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                     label="Дисциплина"
                     rules={[{ required: true, message: 'Введите дисциплину' }]}
                 >
-                    <Input placeholder="Введите дисциплину" />
+                    <Select
+                        placeholder="Выберите дисциплину"
+                        showSearch
+                        filterOption={(input, option) =>
+                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={disciplines?.map((lesson) => ({
+                            value: lesson.id,
+                            label: lesson.name
+                        }))}
+                    />
                 </Form.Item>
                 <Form.Item
                     name="group"

@@ -1,16 +1,26 @@
 import { type FC, useEffect, useState } from 'react'
-import { Button, Collapse, Typography } from 'antd'
+import { Button, Collapse, message, Typography } from 'antd'
 import ScheduleTable from '../../../schedule/components/ScheduleTable'
 import { Link, useNavigate } from 'react-router-dom'
 import { pathsConfig } from '@/pathsConfig'
 import { StyledGroupListWrapper } from './GroupList.styled.tsx'
-import { useGetAllGroupsQuery } from '../../api/groups.api.ts'
+import { useDeleteGroupMutation, useGetAllGroupsQuery } from '../../api/groups.api.ts'
+import ConfirmDelete from '../../../kit/components/ConfirmDelete'
+import { Flex } from '@/kit'
 
 const AdminDashboard: FC = () => {
     const navigate = useNavigate()
-    const { data: groups } = useGetAllGroupsQuery()
+
+    const { data: groups, refetch } = useGetAllGroupsQuery()
+    const [deleteGroup] = useDeleteGroupMutation()
 
     const [activeKeys, setActiveKeys] = useState<string[]>([])
+
+    useEffect(() => {
+        void refetch()
+    }, [])
+
+    console.log('groups', groups)
 
     useEffect(() => {
         if (groups?.[0]?.id) {
@@ -40,6 +50,16 @@ const AdminDashboard: FC = () => {
         setActiveKeys(typeof keys === 'string' ? [keys] : keys)
     }
 
+    const handleDelete = async (id: string): Promise<void> => {
+        try {
+            await deleteGroup(id).unwrap()
+            void message.success('Группа удалена')
+            void refetch()
+        } catch (error) {
+            void message.error('Ошибка при удалении группы')
+        }
+    }
+
     return (
         <StyledGroupListWrapper>
             <div className="top-row">
@@ -60,12 +80,18 @@ const AdminDashboard: FC = () => {
                                 <Collapse.Panel header={group.name} key={group.id}>
                                     <div className='collapse-top'>
                                         <div className='left'>
-                                            <div>Классный руководитель: {group.teacher.name}</div>
+                                            <div>Классный руководитель: {group.teacher?.name ?? '-'}</div>
                                             <div>Расписание</div>
                                         </div>
-                                        <Link to={pathsConfig.group} state={{ id: group.id }}>
-                                            Страница группы
-                                        </Link>
+                                        <Flex alignItems='center'>
+                                            <Link to={pathsConfig.group} state={{ id: group.id }}>
+                                                Страница группы
+                                            </Link>
+                                            <ConfirmDelete
+                                                handleDelete={async () => { await handleDelete(group.id) }}
+                                                title='Вы уверены, что хотите удалить эту группу?'
+                                            />
+                                        </Flex>
                                     </div>
                                     <ScheduleTable schedule={group.schedule}/>
                                 </Collapse.Panel>

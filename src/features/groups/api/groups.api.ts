@@ -7,6 +7,14 @@ export interface CreateGroupPayload {
     schedule: Omit<Collections.Schedule, 'id'>
 }
 
+export interface UpdateGroupPayload {
+    id: string
+    name: string
+    teacher: string
+    students: string[]
+    schedule: Omit<Collections.Schedule, 'id'>
+}
+
 export const groupsApi = api.injectEndpoints({
     endpoints: (builder) => ({
         getAllGroups: builder.query<Collections.Group[], | void>({
@@ -19,6 +27,13 @@ export const groupsApi = api.injectEndpoints({
             query: (body) => ({
                 url: '/groups',
                 method: 'POST',
+                body
+            })
+        }),
+        updateGroup: builder.mutation<Collections.Group, | UpdateGroupPayload>({
+            query: ({ id, ...body }) => ({
+                url: `/groups/${id}`,
+                method: 'PATCH',
                 body
             })
         }),
@@ -35,5 +50,6 @@ export const {
     useGetAllGroupsQuery,
     useGetGroupQuery,
     useCreateGroupMutation,
-    useDeleteGroupMutation
+    useDeleteGroupMutation,
+    useUpdateGroupMutation
 } = groupsApi

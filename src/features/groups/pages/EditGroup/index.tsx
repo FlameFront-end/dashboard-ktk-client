@@ -1,26 +1,25 @@
-import { type FC, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { type FC, useEffect, useState } from 'react'
 import { Form, Input, Select, Tabs, Button, message, Space, Card } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import { Flex } from '@/kit'
 import { useGetAllTeachersQuery } from '../../../teachers/api/teachers.api'
 import { useGetAllStudentsQuery } from '../../../students/api/students.api'
-import { type CreateGroupPayload, useCreateGroupMutation, useGetAllGroupsQuery } from '../../api/groups.api.ts'
+import {
+    type UpdateGroupPayload,
+    useGetGroupQuery, useUpdateGroupMutation
+} from '../../api/groups.api.ts'
 import { daysOfWeek } from '@/constants'
-import { pathsConfig } from '@/pathsConfig'
-import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
+import { useLocation } from 'react-router-dom'
 
-const CreateGroup: FC = () => {
-    const navigate = useNavigate()
+const UpdateGroup: FC = () => {
+    const { state } = useLocation()
 
     const [form] = Form.useForm()
-
-    const { refetch } = useGetAllGroupsQuery()
     const { data: teachers } = useGetAllTeachersQuery()
     const { data: students } = useGetAllStudentsQuery()
-    const { data: disciplines } = useGetAllDisciplinesQuery()
+    const { data: group, refetch } = useGetGroupQuery(state.id)
 
-    const [createGroup, { isLoading }] = useCreateGroupMutation()
+    const [updateGroup, { isLoading }] = useUpdateGroupMutation()
 
     const [schedule, setSchedule] = useState<Record<string, any[]>>({
         monday: [],
@@ -30,10 +29,36 @@ const CreateGroup: FC = () => {
         friday: []
     })
 
+    useEffect(() => {
+        if (group?.schedule) {
+            setSchedule({
+                monday: group.schedule.monday || [],
+                tuesday: group.schedule.tuesday || [],
+                wednesday: group.schedule.wednesday || [],
+                thursday: group.schedule.thursday || [],
+                friday: group.schedule.friday || []
+            })
+
+            form.setFieldsValue({
+                name: group.name,
+                teacher: group.teacher?.id,
+                students: group.students?.map((student) => student.id)
+            })
+        } else {
+            setSchedule({
+                monday: [],
+                tuesday: [],
+                wednesday: [],
+                thursday: [],
+                friday: []
+            })
+        }
+    }, [group, form])
+
     const handleAddSubject = (day: string): void => {
         setSchedule((prev) => ({
             ...prev,
-            [day]: [...prev[day], { discipline: '', teacher: '', cabinet: '' }]
+            [day]: [...prev[day], { title: '', teacher: '', cabinet: '' }]
         }))
     }
 
@@ -53,15 +78,15 @@ const CreateGroup: FC = () => {
 
     const handleSubmit = async (values: any): Promise<void> => {
         try {
-            const payload: CreateGroupPayload = {
+            const payload: UpdateGroupPayload = {
                 ...values,
+                id: state.id,
                 schedule
             }
-            await createGroup(payload).unwrap().then(() => {
-                void message.success('Группа успешно создана')
-                form.resetFields()
+
+            await updateGroup(payload).unwrap().then(() => {
+                void message.success('Группа успешно изменена')
                 void refetch()
-                navigate(pathsConfig.group_list)
                 setSchedule({
                     monday: [],
                     tuesday: [],
@@ -71,12 +96,12 @@ const CreateGroup: FC = () => {
                 })
             })
         } catch (error) {
-            void message.error('Ошибка при создании группы')
+            void message.error('Ошибка при изменении группы')
         }
     }
 
     return (
-        <Card title='Создание группы'>
+        <Card title='Редактирование группы'>
             <Form
                 form={form}
                 layout="vertical"
@@ -135,25 +160,15 @@ const CreateGroup: FC = () => {
                             <Flex direction="column" gap={24}>
                                 {schedule[en].map((subject, index) => (
                                     <Space key={index} align="baseline">
-                                        <Select
-                                            placeholder="Выберите предмент"
-                                            value={subject.discipline?.length ? subject.discipline : null}
-                                            onChange={(value) => { handleScheduleChange(en, index, 'discipline', value) }}
-                                            showSearch
-                                            filterOption={(input, option) =>
-                                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                            }
-                                            options={disciplines?.map((discipline) => ({
-                                                value: discipline.id,
-                                                label: discipline.name
-                                            }))}
-                                            style={{ width: 200 }}
+                                        <Input
+                                            placeholder="Предмет"
+                                            value={subject.title}
+                                            onChange={(e) => { handleScheduleChange(en, index, 'title', e.target.value) }}
                                         />
-
                                         <Select
                                             placeholder="Выберите учителя"
-                                            value={subject.teacher.length ? subject.teacher : null}
-                                            onChange={(value) => { handleScheduleChange(en, index, 'teacher', value) }}
+                                            value={subject.teacherId}
+                                            onChange={(value) => { handleScheduleChange(en, index, 'teacherId', value) }}
                                             showSearch
                                             filterOption={(input, option) =>
                                                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -187,7 +202,7 @@ const CreateGroup: FC = () => {
 
                 <Form.Item style={{ marginTop: '20px' }}>
                     <Button htmlType="submit" type="primary" loading={isLoading}>
-                        Создать группу
+                        Изменить группу
                     </Button>
                 </Form.Item>
             </Form>
@@ -195,4 +210,4 @@ const CreateGroup: FC = () => {
     )
 }
 
-export default CreateGroup
+export default UpdateGroup

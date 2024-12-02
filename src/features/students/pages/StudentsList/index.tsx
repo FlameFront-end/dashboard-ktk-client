@@ -51,7 +51,7 @@ const StudentsList: FC = () => {
 
         const filtered = students?.filter((student: Collections.Student) =>
             student.name.toLowerCase().includes(lowercasedValue) ||
-            student.group.name.toLowerCase().includes(lowercasedValue)
+            student.group?.name.toLowerCase().includes(lowercasedValue)
         )
 
         setFilteredData(filtered ?? [])
@@ -85,7 +85,7 @@ const StudentsList: FC = () => {
     const dataSource: DataSource[] = (searchText ? filteredData : students)?.map(record => ({
         id: record?.id ?? '-',
         name: record?.name ?? '-',
-        group: record?.group.name ?? '-',
+        group: record?.group?.name ?? '-',
         birthDate: getDateFormat(record?.birthDate) ?? '-',
         phone: record?.phone ?? '-',
         email: record?.email ?? '-'

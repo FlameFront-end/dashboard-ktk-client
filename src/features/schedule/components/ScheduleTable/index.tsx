@@ -63,7 +63,7 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
             render: (lessons: Collections.Lesson[] | undefined) => (
                 lessons?.map((lesson, idx) => (
                     <div key={idx} style={{ marginBottom: '8px' }}>
-                        <strong>{lesson.title}</strong>
+                        <strong>{lesson.discipline.name}</strong>
                         <div>Учитель: {lesson.teacher.name}</div>
                         <div>Кабинет: {lesson.cabinet}</div>
                     </div>
