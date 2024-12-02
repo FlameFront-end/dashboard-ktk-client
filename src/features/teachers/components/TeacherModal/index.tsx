@@ -49,10 +49,10 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                 await createTeacher(values).unwrap()
                 void message.success('Данные для входа отправлены преподавателю на почту')
             }
-            void refetch()
-            form.resetFields()
             onSuccess()
             onClose()
+            void refetch()
+            form.resetFields()
         } catch (error: any) {
             if (teacher) {
                 void message.error('Ошибка при редактировании преподавателя')

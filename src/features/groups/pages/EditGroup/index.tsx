@@ -10,13 +10,15 @@ import {
 } from '../../api/groups.api.ts'
 import { daysOfWeek } from '@/constants'
 import { useLocation } from 'react-router-dom'
+import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
 
 const UpdateGroup: FC = () => {
     const { state } = useLocation()
-
     const [form] = Form.useForm()
+
     const { data: teachers } = useGetAllTeachersQuery()
     const { data: students } = useGetAllStudentsQuery()
+    const { data: disciplines } = useGetAllDisciplinesQuery()
     const { data: group, refetch } = useGetGroupQuery(state.id)
 
     const [updateGroup, { isLoading }] = useUpdateGroupMutation()
@@ -158,35 +160,47 @@ const UpdateGroup: FC = () => {
                         label: ru,
                         children: (
                             <Flex direction="column" gap={24}>
-                                {schedule[en].map((subject, index) => (
-                                    <Space key={index} align="baseline">
-                                        <Input
-                                            placeholder="Предмет"
-                                            value={subject.title}
-                                            onChange={(e) => { handleScheduleChange(en, index, 'title', e.target.value) }}
-                                        />
-                                        <Select
-                                            placeholder="Выберите учителя"
-                                            value={subject.teacherId}
-                                            onChange={(value) => { handleScheduleChange(en, index, 'teacherId', value) }}
-                                            showSearch
-                                            filterOption={(input, option) =>
-                                                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                                            }
-                                            options={teachers?.map((teacher) => ({
-                                                value: teacher.id,
-                                                label: teacher.name
-                                            }))}
-                                            style={{ width: 200 }}
-                                        />
-                                        <Input
-                                            placeholder="Кабинет"
-                                            value={subject.cabinet}
-                                            onChange={(e) => { handleScheduleChange(en, index, 'cabinet', e.target.value) }}
-                                        />
-                                        <MinusCircleOutlined onClick={() => { handleRemoveSubject(en, index) }} />
-                                    </Space>
-                                ))}
+                                {schedule[en].map((subject, index) => {
+                                    return (
+                                        <Space key={index} align="baseline">
+                                            <Select
+                                                placeholder="Выберите предмент"
+                                                value={subject.discipline?.id ? subject.discipline.id : null}
+                                                onChange={(value) => { handleScheduleChange(en, index, 'discipline', value) }}
+                                                showSearch
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                options={disciplines?.map((discipline) => ({
+                                                    value: discipline.id,
+                                                    label: discipline.name
+                                                }))}
+                                                style={{ width: 200 }}
+                                            />
+
+                                            <Select
+                                                placeholder="Выберите учителя"
+                                                value={subject.teacher.id ? subject.teacher.id : null}
+                                                onChange={(value) => { handleScheduleChange(en, index, 'teacher', value) }}
+                                                showSearch
+                                                filterOption={(input, option) =>
+                                                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                                                }
+                                                options={teachers?.map((teacher) => ({
+                                                    value: teacher.id,
+                                                    label: teacher.name
+                                                }))}
+                                                style={{ width: 200 }}
+                                            />
+                                            <Input
+                                                placeholder="Кабинет"
+                                                value={subject.cabinet}
+                                                onChange={(e) => { handleScheduleChange(en, index, 'cabinet', e.target.value) }}
+                                            />
+                                            <MinusCircleOutlined onClick={() => { handleRemoveSubject(en, index) }} />
+                                        </Space>
+                                    )
+                                })}
                                 <Button
                                     type="dashed"
                                     onClick={() => { handleAddSubject(en) }}

@@ -12,7 +12,6 @@ import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.
 
 const CreateGroup: FC = () => {
     const navigate = useNavigate()
-
     const [form] = Form.useForm()
 
     const { refetch } = useGetAllGroupsQuery()

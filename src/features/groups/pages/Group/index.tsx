@@ -62,7 +62,7 @@ const AdminDashboard: FC = () => {
                     <Typography.Title level={4} style={{ marginTop: '10px' }}>Классный руковоидитель: {group?.teacher?.name ?? '-'}</Typography.Title>
                 </div>
 
-                <Button onClick={() => { navigate(pathsConfig.edit_group, { state: group?.id }) }}>
+                <Button onClick={() => { navigate(pathsConfig.edit_group, { state: { id: group?.id } }) }}>
                     <EditOutlined />
                 </Button>
             </Flex>
