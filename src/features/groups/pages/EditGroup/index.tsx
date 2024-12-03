@@ -1,4 +1,5 @@
 import { type FC, useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Form, Input, Select, Tabs, Button, message, Space, Card } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import { Flex } from '@/kit'
@@ -9,11 +10,13 @@ import {
     useGetGroupQuery, useUpdateGroupMutation
 } from '../../api/groups.api.ts'
 import { daysOfWeek } from '@/constants'
-import { useLocation } from 'react-router-dom'
 import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
+import { pathsConfig } from '@/pathsConfig'
 
 const UpdateGroup: FC = () => {
     const { state } = useLocation()
+    const navigate = useNavigate()
+
     const [form] = Form.useForm()
 
     const { data: teachers } = useGetAllTeachersQuery()
@@ -33,26 +36,29 @@ const UpdateGroup: FC = () => {
 
     useEffect(() => {
         if (group?.schedule) {
-            setSchedule({
-                monday: group.schedule.monday || [],
-                tuesday: group.schedule.tuesday || [],
-                wednesday: group.schedule.wednesday || [],
-                thursday: group.schedule.thursday || [],
-                friday: group.schedule.friday || []
-            })
-
-            form.setFieldsValue({
-                name: group.name,
-                teacher: group.teacher?.id,
-                students: group.students?.map((student) => student.id)
-            })
-        } else {
-            setSchedule({
+            const initialSchedule: Record<string, Array<{ discipline: any, teacher: any, cabinet: string }>> = {
                 monday: [],
                 tuesday: [],
                 wednesday: [],
                 thursday: [],
                 friday: []
+            }
+
+            daysOfWeek.forEach(({ en }) => {
+                // @ts-expect-error
+                initialSchedule[en] = (group?.schedule[en] || []).map(subject => ({
+                    discipline: subject.discipline || null,
+                    teacher: subject.teacher || null,
+                    cabinet: subject.cabinet || ''
+                }))
+            })
+
+            setSchedule(initialSchedule)
+
+            form.setFieldsValue({
+                name: group.name,
+                teacher: group.teacher?.id,
+                students: group.students?.map((student) => student.id)
             })
         }
     }, [group, form])
@@ -72,10 +78,18 @@ const UpdateGroup: FC = () => {
     }
 
     const handleScheduleChange = (day: string, index: number, field: string, value: any): void => {
-        setSchedule((prev) => ({
-            ...prev,
-            [day]: prev[day].map((item, i) => (i === index ? { ...item, [field]: value } : item))
-        }))
+        setSchedule((prev) => {
+            const newDaySchedule = prev[day].map((item, i) => {
+                if (i === index) {
+                    const newObject = field === 'discipline' ? disciplines?.find(d => d.id === value)
+                        : field === 'teacher' ? teachers?.find(t => t.id === value)
+                            : value
+                    return { ...item, [field]: newObject }
+                }
+                return item
+            })
+            return { ...prev, [day]: newDaySchedule }
+        })
     }
 
     const handleSubmit = async (values: any): Promise<void> => {
@@ -88,14 +102,8 @@ const UpdateGroup: FC = () => {
 
             await updateGroup(payload).unwrap().then(() => {
                 void message.success('Группа успешно изменена')
+                navigate(pathsConfig.group, { state: { id: state.id } })
                 void refetch()
-                setSchedule({
-                    monday: [],
-                    tuesday: [],
-                    wednesday: [],
-                    thursday: [],
-                    friday: []
-                })
             })
         } catch (error) {
             void message.error('Ошибка при изменении группы')

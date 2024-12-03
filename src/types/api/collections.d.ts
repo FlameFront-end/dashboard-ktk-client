@@ -3,9 +3,11 @@ declare namespace Collections {
 
     interface Lesson {
         cabinet: string
-        discipline: Discipline
-        teacher: Teacher
+        discipline: Discipline | null
+        teacher: Teacher | null
+        id: string
     }
+
     interface Schedule {
         id: string
         monday: Lesson[]

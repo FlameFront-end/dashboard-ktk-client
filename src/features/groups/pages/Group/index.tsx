@@ -37,10 +37,6 @@ const AdminDashboard: FC = () => {
             dataIndex: 'name'
         },
         {
-            title: 'Группа',
-            dataIndex: 'group'
-        },
-        {
             title: 'Дата рождения',
             dataIndex: 'birthDate'
         },
