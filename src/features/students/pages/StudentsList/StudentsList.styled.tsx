@@ -1,6 +1,7 @@
 import styled from 'styled-components'
+import { Card } from 'antd'
 
-export const StyledStudentsListWrapper = styled.div`
+export const StyledStudentsListWrapper = styled(Card)`
     overflow-x: auto;
     max-width: 100%;
 

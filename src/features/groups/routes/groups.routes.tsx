@@ -3,6 +3,7 @@ import GroupList from '../pages/GroupList'
 import Group from '../pages/Group'
 import CreateGroup from '../pages/CreateGroup'
 import EditGroup from '../pages/EditGroup'
+import PerformanceTable from '../pages/PerformanceTable'
 
 export const groupsRoutes = [
     {
@@ -20,5 +21,9 @@ export const groupsRoutes = [
     {
         path: groupsPaths.edit_group,
         element: <EditGroup/>
+    },
+    {
+        path: groupsPaths.performance,
+        element: <PerformanceTable/>
     }
 ]

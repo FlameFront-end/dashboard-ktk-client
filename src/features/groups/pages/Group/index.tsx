@@ -16,7 +16,7 @@ interface DataSourceStudents {
     email: string
 }
 
-const AdminDashboard: FC = () => {
+const Group: FC = () => {
     const navigate = useNavigate()
     const { state } = useLocation()
 
@@ -55,12 +55,17 @@ const AdminDashboard: FC = () => {
             <Flex justifyContent='space-between'>
                 <div>
                     <Typography.Title level={4} style={{ marginBottom: '10px' }}>Группа: {group?.name}</Typography.Title>
-                    <Typography.Title level={4} style={{ marginTop: '10px' }}>Классный руководитель: {group?.teacher?.name ?? '-'}</Typography.Title>
+                    <Typography.Title level={5} style={{ marginTop: '10px' }}>Классный руководитель: {group?.teacher?.name ?? '-'}</Typography.Title>
                 </div>
 
-                <Button onClick={() => { navigate(pathsConfig.edit_group, { state: { id: group?.id } }) }}>
-                    <EditOutlined />
-                </Button>
+                <Flex alignItems='center'>
+                    <Button onClick={() => { navigate(pathsConfig.performance, { state: { id: group?.id } }) }}>
+                        Успеваемость группы
+                    </Button>
+                    <Button onClick={() => { navigate(pathsConfig.edit_group, { state: { id: group?.id } }) }}>
+                        <EditOutlined />
+                    </Button>
+                </Flex>
             </Flex>
 
             <Flex direction='column' gap={24}>
@@ -84,4 +89,4 @@ const AdminDashboard: FC = () => {
     )
 }
 
-export default AdminDashboard
+export default Group

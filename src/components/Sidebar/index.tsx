@@ -25,9 +25,15 @@ const Sidebar: FC = () => {
             key: 'my_group',
             icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.group, { state: { id: groupId } }) }
+        },
+        {
+            label: 'Классный журнал',
+            key: 'my_group_performance',
+            icon: <HomeOutlined />,
+            onClick: () => { navigate(pathsConfig.performance, { state: { id: groupId } }) }
         }] : []),
         {
-            label: 'Группы',
+            label: 'Все группы',
             key: 'group_list',
             icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.group_list) }

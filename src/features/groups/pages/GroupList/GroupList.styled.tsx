@@ -1,6 +1,7 @@
 import styled from 'styled-components'
+import { Card } from 'antd'
 
-export const StyledGroupListWrapper = styled.div`
+export const StyledGroupListWrapper = styled(Card)`
     .top-row {
         display: flex;
         justify-content: space-between;
