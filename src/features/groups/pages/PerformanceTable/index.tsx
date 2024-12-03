@@ -1,11 +1,12 @@
-import { type FC, type ReactNode, useState } from 'react'
-import { Table, Select, Button, Card, Typography } from 'antd'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
+import { Table, Select, Button, Card, Typography, message } from 'antd'
 import moment from 'moment'
 import { useLocation } from 'react-router-dom'
 import { useGetGroupQuery } from '../../api/groups.api.ts'
 import { Flex } from '@/kit'
+import { useCreateGradeMutation } from '../../api/grades.api.ts'
 
-const grades = ['n', '2', '3', '4', '5']
+const grades = ['-', 'n', '2', '3', '4', '5']
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
 interface StudentGradeRecord {
@@ -17,8 +18,10 @@ interface StudentGradeRecord {
 
 const PerformanceTable: FC = () => {
     const { state } = useLocation()
+    const groupId = state.id as string
 
-    const { data: group } = useGetGroupQuery(state.id)
+    const { data: group } = useGetGroupQuery(groupId)
+    const [createGrade] = useCreateGradeMutation()
 
     const schedule = group?.schedule ?? ({} as Collections.Schedule)
     const students = group?.students ?? ([] as Collections.Student[])
@@ -28,7 +31,7 @@ const PerformanceTable: FC = () => {
     const maxWeekStart = today.startOf('isoWeek')
 
     const [currentWeekStart, setCurrentWeekStart] = useState(currentWeekStartInitial)
-    const [gradesData, setGradesData] = useState<Record<string, Record<string, string>>>({})
+    const [gradesData, setGradesData] = useState<Record<string, Record<string, Record<string, string>>>>({})
 
     const generateTableData = (discipline: Collections.Discipline): ReactNode => {
         const lessonDates = weekdays.reduce((acc: moment.Moment[], day: string, index) => {
@@ -48,15 +51,7 @@ const PerformanceTable: FC = () => {
                 render: (grade: string, record: StudentGradeRecord) => (
                     <Select
                         value={grade}
-                        onChange={(value) => {
-                            setGradesData(prevGrades => ({
-                                ...prevGrades,
-                                [discipline.id]: {
-                                    ...prevGrades?.[discipline.id],
-                                    [`${record.studentId}-${date.format('YYYY-MM-DD')}`]: value
-                                }
-                            }))
-                        }}
+                        onChange={(value) => { handleGradeChange(value, discipline.id, date.format('YYYY-MM-DD'), record.studentId) }}
                     >
                         {grades.map(grade => (
                             <Select.Option key={grade} value={grade}>{grade}</Select.Option>
@@ -69,12 +64,12 @@ const PerformanceTable: FC = () => {
         const data = students.map(student => {
             const row: any = { student: student.name, studentId: student.id, key: student.id }
             lessonDates.forEach(date => {
-                row[date.format('DD.MM')] = gradesData?.[discipline.id]?.[`${student.id}-${date.format('YYYY-MM-DD')}`] || 'n'
+                row[date.format('DD.MM')] = gradesData?.[discipline.id]?.[date.format('YYYY-MM-DD')]?.[student.id] || '-'
             })
             return row
         })
 
-        return <Table columns={columns} dataSource={data} pagination={false}/>
+        return <Table columns={columns} dataSource={data} pagination={false} />
     }
 
     const lessons = Object.values(schedule)
@@ -98,14 +93,45 @@ const PerformanceTable: FC = () => {
         setCurrentWeekStart(currentWeekStart.clone().subtract(1, 'week'))
     }
 
-    const sendToServer = (): void => {
-        const dataToSend = {
-            groupId: state.id,
+    const fetchGrades = async (): Promise<void> => {
+        try {
+            const response = await fetch(`http://localhost:3000/groups/${groupId}/grades?weekStart=${currentWeekStart.format('YYYY-MM-DD')}`)
+            const data = await response.json()
+            setGradesData(data)
+        } catch (error) {
+            void message.error('Ошибка при загрузке оценок.')
+        }
+    }
+
+    useEffect(() => {
+        void fetchGrades()
+    }, [currentWeekStart, groupId])
+
+    const sendToServer = async (): Promise<void> => {
+        const dto = {
+            groupId,
             weekStart: currentWeekStart.format('YYYY-MM-DD'),
             grades: gradesData
         }
 
-        console.log('dataToSend', dataToSend)
+        void createGrade(dto).unwrap().then(() => {
+            void message.success('Оценки успешно сохранены.')
+        }).catch(() => {
+            void message.success('Оценки успешно сохранены.')
+        })
+    }
+
+    const handleGradeChange = (value: string, disciplineId: string, date: string, studentId: string): void => {
+        setGradesData(prevGrades => ({
+            ...prevGrades,
+            [disciplineId]: {
+                ...(prevGrades?.[disciplineId] || {}),
+                [date]: {
+                    ...(prevGrades?.[disciplineId]?.[date] || {}),
+                    [studentId]: value
+                }
+            }
+        }))
     }
 
     return (
@@ -113,10 +139,10 @@ const PerformanceTable: FC = () => {
             <div style={{ marginBottom: '16px' }}>
                 <Flex gap={12} alignItems="center">
                     <Button onClick={previousWeek} disabled={currentWeekStart.isBefore('2024-09-01')}>
-                        Предыдущая недели
+                      Предыдущая недели
                     </Button>
                     <Button onClick={nextWeek} disabled={currentWeekStart.isSame(maxWeekStart)}>
-                        Следующая неделя
+                      Следующая неделя
                     </Button>
 
                     <span style={{ marginLeft: '16px' }}>
