@@ -6,6 +6,7 @@ export const StyledLayout = styled(Layout)`
     max-width: calc(1120px + 200px + 50px);
     display: flex;
     gap: 16px;
+    padding: 20px;
     background-color: #141414;
     margin: 0 auto;
 

@@ -9,9 +9,21 @@ const MobileNavBottom: FC = () => {
 
     return (
         <StyledMobileNavBottomWrapper>
-            <Link to={pathsConfig.chat_list} className={`link ${locName === 'chat_list' ? 'active' : ''}`}>
+            <Link to={pathsConfig.group_list} className={`link ${locName === 'groups' ? 'active' : ''}`}>
                 <div className='content'>
-                    Мессенджер
+                  Группы
+                </div>
+            </Link>
+
+            <Link to={pathsConfig.teachers_list} className={`link ${locName === 'teachers' ? 'active' : ''}`}>
+                <div className='content'>
+                  Преподаватели
+                </div>
+            </Link>
+
+            <Link to={pathsConfig.students_list} className={`link ${locName === 'students' ? 'active' : ''}`}>
+                <div className='content'>
+                  Студенты
                 </div>
             </Link>
         </StyledMobileNavBottomWrapper>

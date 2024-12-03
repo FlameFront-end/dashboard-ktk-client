@@ -1,5 +1,5 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { Table, Input, Space, Button, message } from 'antd'
+import { Table, Input, Space, Button, message, Typography } from 'antd'
 import { StyledStudentsListWrapper } from './StudentsList.styled'
 import { useDeleteStudentMutation, useGetAllStudentsQuery } from '../../api/students.api.ts'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
@@ -124,6 +124,7 @@ const StudentsList: FC = () => {
 
     return (
         <StyledStudentsListWrapper>
+            <Typography.Title level={2}>Все студенты</Typography.Title>
             <Space direction="vertical" style={{ marginBottom: 16, width: '100%' }}>
                 <div className="top-row">
                     <Input.Search
