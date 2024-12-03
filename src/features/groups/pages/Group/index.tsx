@@ -55,7 +55,7 @@ const AdminDashboard: FC = () => {
             <Flex justifyContent='space-between'>
                 <div>
                     <Typography.Title level={4} style={{ marginBottom: '10px' }}>Группа: {group?.name}</Typography.Title>
-                    <Typography.Title level={4} style={{ marginTop: '10px' }}>Классный руковоидитель: {group?.teacher?.name ?? '-'}</Typography.Title>
+                    <Typography.Title level={4} style={{ marginTop: '10px' }}>Классный руководитель: {group?.teacher?.name ?? '-'}</Typography.Title>
                 </div>
 
                 <Button onClick={() => { navigate(pathsConfig.edit_group, { state: { id: group?.id } }) }}>

@@ -33,8 +33,6 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
         const row: TableRow = { index: index + 1, time }
         daysOfWeek.forEach(({ en }) => {
             row[en] = schedule[en as Collections.DayKey]?.[index]
-                ? [schedule[en as Collections.DayKey][index]]
-                : undefined
         })
         return row
     })
@@ -60,15 +58,17 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
             onCell: (record: TableRow) => ({
                 className: currentCell?.day === en && currentCell?.time === record.time ? 'highlight-cell' : ''
             }),
-            render: (lessons: Collections.Lesson[] | undefined) => (
-                lessons?.map((lesson, idx) => (
-                    <div key={idx} style={{ marginBottom: '8px' }}>
-                        <strong>{lesson.discipline.name}</strong>
-                        <div>Учитель: {lesson.teacher.name}</div>
+            render: (lesson: Collections.Lesson | undefined) => {
+                if (!lesson) return '—'
+
+                return (
+                    <div style={{ marginBottom: '8px' }}>
+                        <strong>{lesson.discipline?.name}</strong>
+                        <div>Учитель: {lesson.teacher?.name}</div>
                         <div>Кабинет: {lesson.cabinet}</div>
                     </div>
-                )) ?? ''
-            ),
+                )
+            },
             className: currentDay === en ? 'current-day-column' : ''
         }))
     ]
@@ -84,7 +84,7 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
                 const [start, end] = time.split(' - ')
                 return (
                     dayjs(currentTime, 'HH:mm').isAfter(dayjs(start, 'HH:mm')) &&
-                    dayjs(currentTime, 'HH:mm').isBefore(dayjs(end, 'HH:mm'))
+                  dayjs(currentTime, 'HH:mm').isBefore(dayjs(end, 'HH:mm'))
                 )
             })
 
