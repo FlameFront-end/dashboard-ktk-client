@@ -20,8 +20,6 @@ const AdminDashboard: FC = () => {
         void refetch()
     }, [])
 
-    console.log('groups', groups)
-
     useEffect(() => {
         if (groups?.[0]?.id) {
             setActiveKeys([groups[0].id])

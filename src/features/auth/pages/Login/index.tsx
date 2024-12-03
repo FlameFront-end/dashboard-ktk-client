@@ -1,12 +1,10 @@
-import { type FC, useEffect } from 'react'
+import { type FC } from 'react'
 import { Button, Form, Input } from 'antd'
 import { useAppAction } from '@/hooks'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { useLoginMutation } from '../../api/auth.api'
 import type { LoginPayload } from '../../types/login.types'
-import { BACKEND_URL } from '@/constants'
 import { Card } from '@/kit'
 
 import { StyledAuthWrapper } from '../styled/Auth.styled.tsx'
@@ -18,22 +16,6 @@ const Login: FC = () => {
     const [login, { isLoading }] = useLoginMutation()
 
     const [form] = Form.useForm()
-
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search)
-        const token = params.get('token')
-
-        if (token) {
-            axios.get(`${BACKEND_URL}/auth/validate-token/${token}`)
-                .then(response => {
-                    toast.success('Успешный вход в аккаунт')
-                    setUser(response.data)
-                })
-                .catch(() => {
-                    toast.error('Что-то пошло не так')
-                })
-        }
-    }, [])
 
     const handleFinish = async (payload: LoginPayload): Promise<void> => {
         const response = await login(payload)

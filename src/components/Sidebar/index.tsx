@@ -11,13 +11,21 @@ import {
     LogoutButton,
     LogoutButtonLabel
 } from './Sidebar.styled'
+import { useAppSelector } from '@/hooks'
 
 const Sidebar: FC = () => {
+    const groupId = useAppSelector(state => state.auth.user.groupId)
     const { logout } = useAuth()
     const navigate = useNavigate()
     const collapsed = false
 
     const menuItems = [
+        ...(groupId ? [{
+            label: 'Моя группа',
+            key: 'my_group',
+            icon: <HomeOutlined />,
+            onClick: () => { navigate(pathsConfig.group, { state: { id: groupId } }) }
+        }] : []),
         {
             label: 'Группы',
             key: 'group_list',
@@ -36,24 +44,6 @@ const Sidebar: FC = () => {
             icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.students_list) }
         }
-        // {
-        //     label: 'Моя страница',
-        //     key: 'root',
-        //     icon: <HomeOutlined />,
-        //     onClick: () => { navigate(pathsConfig.profile, { state: { userId } }) }
-        // },
-        // {
-        //     label: 'Мессенджер',
-        //     key: 'chat_list',
-        //     icon: <MessageOutlined />,
-        //     onClick: () => { navigate(pathsConfig.chat_list) }
-        // },
-        // {
-        //     label: 'Друзья',
-        //     key: 'friends',
-        //     icon: <TeamOutlined />,
-        //     onClick: () => { navigate(pathsConfig.friends) }
-        // }
     ]
 
     return (

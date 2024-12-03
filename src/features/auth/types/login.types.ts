@@ -4,12 +4,10 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-    token: string
-    id: number
-    ava: string
+    email: string
+    id: string
     name: string
-    surname: string
-    patronymic: string | null
-    isOnline: boolean
-    lastSeen: string
+    role: 'teacher' | 'student' | 'admin'
+    token: string
+    groupId: string | null
 }

@@ -5,39 +5,33 @@ import type { LoginResponse } from '../types/login.types'
 interface AuthState {
     user: {
         isAuth: boolean
-        isOnline: boolean
-        lastSeen: string | undefined
         token: string | undefined | null
-        id: number | undefined
-        ava: string | undefined
+        id: string | undefined
+        email: string | undefined
         name: string | undefined
-        surname: string | undefined
-        patronymic: string | null | undefined
+        role: 'teacher' | 'student' | 'admin' | undefined
+        groupId: string | null | undefined
     }
 }
 
 const user = JSON.parse(Cookies.get('user') ?? '{}') as {
     token?: string
-    id?: number
-    ava?: string
+    id?: string
+    email?: string
     name?: string
-    surname?: string
-    patronymic?: string | null
-    isOnline?: boolean
-    lastSeen?: string
+    role?: 'teacher' | 'student' | 'admin'
+    groupId?: string | null
 }
 
 const initialState: AuthState = {
     user: {
-        isOnline: false,
-        lastSeen: user?.lastSeen,
         isAuth: user?.token != null,
         token: user?.token,
         id: user?.id,
-        ava: user?.ava,
         name: user?.name,
-        surname: user?.surname,
-        patronymic: user?.patronymic
+        role: user?.role,
+        email: user?.email,
+        groupId: user?.groupId
     }
 }
 
@@ -58,14 +52,13 @@ export const authSlice = createSlice({
             Cookies.remove('token')
             Cookies.remove('user')
 
+            state.user.isAuth = false
             state.user.token = null
             state.user.id = undefined
             state.user.name = undefined
-            state.user.surname = undefined
-            state.user.patronymic = undefined
-            state.user.isAuth = false
-            state.user.ava = undefined
-            state.user.isOnline = false
+            state.user.email = undefined
+            state.user.role = undefined
+            state.user.groupId = undefined
         }
     }
 })

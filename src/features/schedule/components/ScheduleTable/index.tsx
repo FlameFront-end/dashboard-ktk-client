@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useMemo, useState } from 'react'
 import { Table } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import dayjs from 'dayjs'
@@ -19,23 +19,23 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
     const [currentCell, setCurrentCell] = useState<{ day: string, time: string } | null>(null)
     const [currentDay, setCurrentDay] = useState<string>('')
 
-    const maxLessons = Math.max(
+    const maxLessons = useMemo(() => Math.max(
         ...daysOfWeek.map(({ en }) => schedule[en as Collections.DayKey]?.length || 0)
-    )
+    ), [schedule])
 
-    const timeSlots = Array.from({ length: maxLessons }, (_, index) => {
+    const timeSlots = useMemo(() => Array.from({ length: maxLessons }, (_, index) => {
         const startTime = dayjs('08:00', 'HH:mm').add(index * 100, 'minute')
         const endTime = startTime.add(90, 'minute')
         return `${startTime.format('HH:mm')} - ${endTime.format('HH:mm')}`
-    })
+    }), [maxLessons])
 
-    const tableData: TableRow[] = timeSlots.map((time, index) => {
+    const tableData = useMemo(() => timeSlots.map((time, index) => {
         const row: TableRow = { index: index + 1, time }
         daysOfWeek.forEach(({ en }) => {
             row[en] = schedule[en as Collections.DayKey]?.[index]
         })
         return row
-    })
+    }), [timeSlots, schedule])
 
     const columns: ColumnsType<TableRow> = [
         {
@@ -97,7 +97,7 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
         return () => {
             clearInterval(interval)
         }
-    }, [timeSlots])
+    }, [timeSlots, schedule])
 
     return (
         <StyledScheduleTableWrapper>
