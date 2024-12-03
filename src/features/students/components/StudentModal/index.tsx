@@ -100,7 +100,7 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
                 <Form.Item
                     name="group"
                     label="Группа"
-                    rules={[{ required: true, message: 'Выберите хотя бы одного студента' }]}
+                    rules={[{ required: true, message: 'Выберите группу' }]}
                 >
                     <Select
                         placeholder="Выберите группу"

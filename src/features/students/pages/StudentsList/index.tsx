@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { Table, Input, Space, Button, message } from 'antd'
 import { StyledStudentsListWrapper } from './StudentsList.styled'
 import { useDeleteStudentMutation, useGetAllStudentsQuery } from '../../api/students.api.ts'
@@ -24,6 +24,10 @@ const StudentsList: FC = () => {
     const [filteredData, setFilteredData] = useState<Collections.Student[]>([])
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [editingStudent, setEditingStudent] = useState<Collections.Student | null>(null)
+
+    useEffect(() => {
+        void refetch()
+    }, [])
 
     const handleModalClose = (): void => {
         setIsModalVisible(false)

@@ -30,6 +30,9 @@ export const teachersApi = api.injectEndpoints({
                 method: 'GET'
             })
         }),
+        getAllTeachersWithoutGroup: builder.query<Collections.Teacher[], | void>({
+            query: () => '/teachers/without-group'
+        }),
         getTeacherById: builder.query<Collections.Teacher, string>({
             query: (id) => ({
                 url: `/teachers/${id}`,
@@ -55,6 +58,7 @@ export const teachersApi = api.injectEndpoints({
 export const {
     useCreateTeacherMutation,
     useGetAllTeachersQuery,
+    useGetAllTeachersWithoutGroupQuery,
     useGetTeacherByIdQuery,
     useUpdateTeacherMutation,
     useDeleteTeacherByIdMutation

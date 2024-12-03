@@ -20,6 +20,9 @@ export const groupsApi = api.injectEndpoints({
         getAllGroups: builder.query<Collections.Group[], | void>({
             query: () => '/groups'
         }),
+        getAllGroupsWithoutTeacher: builder.query<Collections.Group[], | void>({
+            query: () => '/groups/without-teacher'
+        }),
         getGroup: builder.query<Collections.Group, | string>({
             query: (id) => `/groups/${id}`
         }),
@@ -48,6 +51,7 @@ export const groupsApi = api.injectEndpoints({
 
 export const {
     useGetAllGroupsQuery,
+    useGetAllGroupsWithoutTeacherQuery,
     useGetGroupQuery,
     useCreateGroupMutation,
     useDeleteGroupMutation,

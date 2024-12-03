@@ -32,6 +32,9 @@ export const studentsApi = api.injectEndpoints({
                 method: 'GET'
             })
         }),
+        getAllStudentsWithoutTeacher: builder.query<Collections.Student[], | void>({
+            query: () => '/students/without-group'
+        }),
         getStudentById: builder.query<Collections.Student, string>({
             query: (id) => ({
                 url: `/students/${id}`,
@@ -57,6 +60,7 @@ export const studentsApi = api.injectEndpoints({
 export const {
     useCreateStudentMutation,
     useGetAllStudentsQuery,
+    useGetAllStudentsWithoutTeacherQuery,
     useGetStudentByIdQuery,
     useDeleteStudentMutation,
     useUpdateStudentMutation

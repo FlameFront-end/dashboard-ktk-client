@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { Table, Input, Space, Button, message } from 'antd'
 import { useDeleteTeacherByIdMutation, useGetAllTeachersQuery } from '../../api/teachers.api.ts'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
@@ -22,6 +22,10 @@ const TeachersList: FC = () => {
     const [filteredData, setFilteredData] = useState<Collections.Teacher[]>([])
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [editingTeacher, setEditingTeacher] = useState<Collections.Teacher | null>(null)
+
+    useEffect(() => {
+        void refetch()
+    }, [])
 
     const handleDelete = async (id: string): Promise<void> => {
         try {

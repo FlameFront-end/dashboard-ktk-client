@@ -3,20 +3,20 @@ import { useNavigate } from 'react-router-dom'
 import { Form, Input, Select, Tabs, Button, message, Space, Card } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import { Flex } from '@/kit'
-import { useGetAllTeachersQuery } from '../../../teachers/api/teachers.api'
-import { useGetAllStudentsQuery } from '../../../students/api/students.api'
+import { useGetAllStudentsWithoutTeacherQuery } from '../../../students/api/students.api'
 import { type CreateGroupPayload, useCreateGroupMutation, useGetAllGroupsQuery } from '../../api/groups.api.ts'
 import { daysOfWeek } from '@/constants'
 import { pathsConfig } from '@/pathsConfig'
 import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
+import { useGetAllTeachersQuery, useGetAllTeachersWithoutGroupQuery } from '../../../teachers/api/teachers.api.ts'
 
 const CreateGroup: FC = () => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
-
     const { refetch } = useGetAllGroupsQuery()
     const { data: teachers } = useGetAllTeachersQuery()
-    const { data: students } = useGetAllStudentsQuery()
+    const { data: classroomTeachers } = useGetAllTeachersWithoutGroupQuery()
+    const { data: students } = useGetAllStudentsWithoutTeacherQuery()
     const { data: disciplines } = useGetAllDisciplinesQuery()
 
     const [createGroup, { isLoading }] = useCreateGroupMutation()
@@ -102,7 +102,7 @@ const CreateGroup: FC = () => {
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                         }
-                        options={teachers?.map((teacher) => ({
+                        options={classroomTeachers?.map((teacher) => ({
                             value: teacher.id,
                             label: teacher.name
                         }))}
