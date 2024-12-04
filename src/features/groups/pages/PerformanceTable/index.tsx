@@ -1,5 +1,5 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { Table, Select, Button, Card, Typography, message } from 'antd'
+import { Table, Select, Button, Card, message, Tabs } from 'antd'
 import moment from 'moment'
 import { useLocation } from 'react-router-dom'
 import { useGetGroupQuery } from '../../api/groups.api.ts'
@@ -23,8 +23,8 @@ const PerformanceTable: FC = () => {
     const { data: group } = useGetGroupQuery(groupId)
     const [createGrade] = useCreateGradeMutation()
 
-    const schedule = group?.schedule ?? ({} as Collections.Schedule)
-    const students = group?.students ?? ([] as Collections.Student[])
+    const schedule = group?.schedule ?? { id: '', friday: [], monday: [], tuesday: [], thursday: [], wednesday: [] }
+    const students = group?.students ?? []
 
     const today = moment()
     const currentWeekStartInitial = today.startOf('isoWeek')
@@ -32,6 +32,16 @@ const PerformanceTable: FC = () => {
 
     const [currentWeekStart, setCurrentWeekStart] = useState(currentWeekStartInitial)
     const [gradesData, setGradesData] = useState<Record<string, Record<string, Record<string, string>>>>({})
+
+    const lessons = Object.values(schedule)
+        .flat()
+        .filter((entry): entry is Collections.Lesson => Boolean(entry.discipline))
+        .reduce((uniqueDisciplines: Collections.Lesson[], lesson) => {
+            if (!uniqueDisciplines.some(d => d.discipline?.id === lesson.discipline?.id)) {
+                uniqueDisciplines.push(lesson)
+            }
+            return uniqueDisciplines
+        }, [])
 
     const generateTableData = (discipline: Collections.Discipline): ReactNode => {
         const lessonDates = weekdays.reduce((acc: moment.Moment[], day: string, index) => {
@@ -72,16 +82,6 @@ const PerformanceTable: FC = () => {
         return <Table columns={columns} dataSource={data} pagination={false} />
     }
 
-    const lessons = Object.values(schedule)
-        .flat()
-        .filter((entry): entry is Collections.Lesson => Boolean(entry.discipline))
-        .reduce((uniqueDisciplines: Collections.Lesson[], lesson) => {
-            if (!uniqueDisciplines.some(d => d.discipline?.id === lesson.discipline?.id)) {
-                uniqueDisciplines.push(lesson)
-            }
-            return uniqueDisciplines
-        }, [])
-
     const nextWeek = (): void => {
         const next = currentWeekStart.clone().add(1, 'week')
         if (!next.isAfter(maxWeekStart)) {
@@ -114,11 +114,10 @@ const PerformanceTable: FC = () => {
             grades: gradesData
         }
 
-        void createGrade(dto).unwrap().then(() => {
-            void message.success('Оценки успешно сохранены.')
-        }).catch(() => {
-            void message.success('Оценки успешно сохранены.')
-        })
+        createGrade(dto)
+            .unwrap()
+            .then(() => message.success('Оценки успешно сохранены.'))
+            .catch(() => message.error('Ошибка при сохранении оценок.'))
     }
 
     const handleGradeChange = (value: string, disciplineId: string, date: string, studentId: string): void => {
@@ -136,31 +135,35 @@ const PerformanceTable: FC = () => {
 
     return (
         <Card>
-            <div style={{ marginBottom: '16px' }}>
+            <Flex direction='column' gap={16}>
+
                 <Flex gap={12} alignItems="center">
                     <Button onClick={previousWeek} disabled={currentWeekStart.isBefore('2024-09-01')}>
-                      Предыдущая недели
+                         Предыдущая неделя
                     </Button>
                     <Button onClick={nextWeek} disabled={currentWeekStart.isSame(maxWeekStart)}>
-                      Следующая неделя
+                          Следующая неделя
                     </Button>
 
                     <span style={{ marginLeft: '16px' }}>
                         {currentWeekStart.format('DD.MM.YYYY')} - {currentWeekStart.clone().add(6, 'days').format('DD.MM.YYYY')}
                     </span>
                 </Flex>
-            </div>
 
-            <Flex direction='column' gap={24} style={{ marginBottom: '16px' }}>
-                {lessons.filter(lesson => lesson.discipline).map(lesson => (
-                    <div key={lesson.id}>
-                        <Typography.Title level={3}>{lesson.discipline?.name}</Typography.Title>
-                        {!!lesson.discipline && generateTableData(lesson.discipline)}
-                    </div>
-                ))}
+                {!!schedule.id && (
+                    <Tabs
+                        items={lessons
+                            .filter(lesson => lesson.discipline)
+                            .map(lesson => ({
+                                key: lesson.discipline?.id ?? '',
+                                label: lesson.discipline?.name ?? 'Unnamed Discipline',
+                                children: lesson.discipline ? generateTableData(lesson.discipline) : <></>
+                            }))}
+                    />
+                )}
+
+                <Button onClick={() => { void sendToServer() }} style={{ width: 'max-content' }}>Сохранить</Button>
             </Flex>
-
-            <Button onClick={sendToServer}>Сохранить</Button>
         </Card>
     )
 }

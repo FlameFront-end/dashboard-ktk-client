@@ -27,11 +27,18 @@ const Sidebar: FC = () => {
             onClick: () => { navigate(pathsConfig.group, { state: { id: groupId } }) }
         },
         {
-            label: 'Классный журнал',
+            label: 'Успеваемость',
             key: 'my_group_performance',
             icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.performance, { state: { id: groupId } }) }
-        }] : []),
+        },
+        {
+            label: 'Классный журнал',
+            key: 'my_class_register',
+            icon: <HomeOutlined />,
+            onClick: () => { navigate(pathsConfig.class_register, { state: { id: groupId } }) }
+        }
+        ] : []),
         {
             label: 'Все группы',
             key: 'group_list',
