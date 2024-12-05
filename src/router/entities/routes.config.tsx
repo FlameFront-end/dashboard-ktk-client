@@ -6,7 +6,6 @@ import { authRoutes } from '../../features/auth/routes/auth.routes.tsx'
 import { groupsRoutes } from '../../features/groups/routes/groups.routes.tsx'
 import { studentsRoutes } from '../../features/students/routes/students.routes.tsx'
 import { teachersRoutes } from '../../features/teachers/routes/teachers.routes.tsx'
-import { classRegisterRoutes } from '../../features/сlass-register/routes/teachers.routes.tsx'
 
 export const routesConfig = [
     {
@@ -19,8 +18,7 @@ export const routesConfig = [
                 children: [
                     ...groupsRoutes,
                     ...studentsRoutes,
-                    ...teachersRoutes,
-                    ...classRegisterRoutes
+                    ...teachersRoutes
                 ]
             },
             ...authRoutes

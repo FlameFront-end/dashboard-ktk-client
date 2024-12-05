@@ -9,6 +9,7 @@ import { pathsConfig } from '@/pathsConfig'
 import { EditOutlined } from '@ant-design/icons'
 import PerformanceTable from '../../components/PerformanceTable'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
+import ClassRegisterTable from '../../components/ClassRegisterTable'
 
 interface DataSourceStudents {
     id: string
@@ -73,6 +74,11 @@ const Group: FC = () => {
         },
         {
             key: '3',
+            label: 'Классный журнал',
+            children: <ClassRegisterTable groupId={groupId}/>
+        },
+        {
+            key: '4',
             label: 'Студенты',
             children: (
                 <>

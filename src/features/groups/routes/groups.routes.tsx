@@ -4,6 +4,7 @@ import Group from '../pages/Group'
 import CreateGroup from '../pages/CreateGroup'
 import EditGroup from '../pages/EditGroup'
 import Performance from '../pages/Performance'
+import ClassRegister from '../pages/ClassRegister'
 
 export const groupsRoutes = [
     {
@@ -25,5 +26,9 @@ export const groupsRoutes = [
     {
         path: groupsPaths.performance,
         element: <Performance/>
+    },
+    {
+        path: groupsPaths.class_register,
+        element: <ClassRegister/>
     }
 ]

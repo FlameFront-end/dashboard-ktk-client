@@ -1,7 +1,6 @@
 import { type FC, useState, type ReactNode } from 'react'
-import { Button, Card, Table, Tabs } from 'antd'
-import { useLocation } from 'react-router-dom'
-import { useGetGroupQuery } from '../../../groups/api/groups.api.ts'
+import { Button, Table, Tabs } from 'antd'
+import { useGetGroupQuery } from '../../api/groups.api.ts'
 import moment from 'moment/moment'
 import { Flex } from '@/kit'
 
@@ -9,10 +8,11 @@ const { TabPane } = Tabs
 
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
-const ClassRegister: FC = () => {
-    const { state } = useLocation()
-    const groupId = state.id as string
+interface Props {
+    groupId: string
+}
 
+const ClassRegisterTable: FC<Props> = ({ groupId }) => {
     const { data: group } = useGetGroupQuery(groupId)
 
     const schedule = group?.schedule ?? { id: '', friday: [], monday: [], tuesday: [], thursday: [], wednesday: [] }
@@ -78,7 +78,7 @@ const ClassRegister: FC = () => {
     }
 
     return (
-        <Card>
+        <>
             <div style={{ marginBottom: '16px' }}>
                 <Flex gap={12} alignItems="center">
                     <Button onClick={previousWeek} disabled={currentWeekStart.isBefore('2024-09-01')}>
@@ -101,8 +101,8 @@ const ClassRegister: FC = () => {
                     </TabPane>
                 ))}
             </Tabs>
-        </Card>
+        </>
     )
 }
 
-export default ClassRegister
+export default ClassRegisterTable
