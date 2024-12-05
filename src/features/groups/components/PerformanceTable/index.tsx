@@ -1,13 +1,13 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { Table, Select, Button, Card, message, Tabs } from 'antd'
+import { Table, Select, Button, message, Tabs } from 'antd'
 import moment from 'moment'
-import { useLocation } from 'react-router-dom'
-import { useGetGroupQuery } from '../../api/groups.api.ts'
 import { Flex } from '@/kit'
+import { useGetGroupQuery } from '../../api/groups.api.ts'
 import { useCreateGradeMutation } from '../../api/grades.api.ts'
 
 const grades = ['-', 'n', '2', '3', '4', '5']
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+const defaultSchedule = { id: '', friday: [], monday: [], tuesday: [], thursday: [], wednesday: [] }
 
 interface StudentGradeRecord {
     student: string
@@ -16,14 +16,15 @@ interface StudentGradeRecord {
     [date: string]: string
 }
 
-const PerformanceTable: FC = () => {
-    const { state } = useLocation()
-    const groupId = state.id as string
+interface Props {
+    groupId: string
+}
 
+const PerformanceTable: FC<Props> = ({ groupId }) => {
     const { data: group } = useGetGroupQuery(groupId)
     const [createGrade] = useCreateGradeMutation()
 
-    const schedule = group?.schedule ?? { id: '', friday: [], monday: [], tuesday: [], thursday: [], wednesday: [] }
+    const schedule = group?.schedule ?? defaultSchedule
     const students = group?.students ?? []
 
     const today = moment()
@@ -134,37 +135,35 @@ const PerformanceTable: FC = () => {
     }
 
     return (
-        <Card>
-            <Flex direction='column' gap={16}>
+        <Flex direction='column' gap={16}>
 
-                <Flex gap={12} alignItems="center">
-                    <Button onClick={previousWeek} disabled={currentWeekStart.isBefore('2024-09-01')}>
-                         Предыдущая неделя
-                    </Button>
-                    <Button onClick={nextWeek} disabled={currentWeekStart.isSame(maxWeekStart)}>
-                          Следующая неделя
-                    </Button>
+            <Flex gap={12} alignItems="center">
+                <Button onClick={previousWeek} disabled={currentWeekStart.isBefore('2024-09-01')}>
+                  Предыдущая неделя
+                </Button>
+                <Button onClick={nextWeek} disabled={currentWeekStart.isSame(maxWeekStart)}>
+                  Следующая неделя
+                </Button>
 
-                    <span style={{ marginLeft: '16px' }}>
-                        {currentWeekStart.format('DD.MM.YYYY')} - {currentWeekStart.clone().add(6, 'days').format('DD.MM.YYYY')}
-                    </span>
-                </Flex>
-
-                {!!schedule.id && (
-                    <Tabs
-                        items={lessons
-                            .filter(lesson => lesson.discipline)
-                            .map(lesson => ({
-                                key: lesson.discipline?.id ?? '',
-                                label: lesson.discipline?.name ?? 'Unnamed Discipline',
-                                children: lesson.discipline ? generateTableData(lesson.discipline) : <></>
-                            }))}
-                    />
-                )}
-
-                <Button onClick={() => { void sendToServer() }} style={{ width: 'max-content' }}>Сохранить</Button>
+                <span style={{ marginLeft: '16px' }}>
+                    {currentWeekStart.format('DD.MM.YYYY')} - {currentWeekStart.clone().add(6, 'days').format('DD.MM.YYYY')}
+                </span>
             </Flex>
-        </Card>
+
+            {!!schedule.id && (
+                <Tabs
+                    items={lessons
+                        .filter(lesson => lesson.discipline)
+                        .map(lesson => ({
+                            key: lesson.discipline?.id ?? '',
+                            label: lesson.discipline?.name ?? 'Unnamed Discipline',
+                            children: lesson.discipline ? generateTableData(lesson.discipline) : <></>
+                        }))}
+                />
+            )}
+
+            <Button onClick={() => { void sendToServer() }} style={{ width: 'max-content' }}>Сохранить</Button>
+        </Flex>
     )
 }
 
