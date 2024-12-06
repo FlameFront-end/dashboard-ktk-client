@@ -23,7 +23,8 @@ const Group: FC = () => {
     const navigate = useNavigate()
     const { state } = useLocation()
 
-    const groupId = state.id
+    const groupId: string = state.id
+    const tab: string | undefined = state.tab
 
     const [deleteGroup] = useDeleteGroupMutation()
     const { data: group, isLoading } = useGetGroupQuery(groupId)
@@ -124,7 +125,7 @@ const Group: FC = () => {
                 </Flex>
             </Flex>
 
-            <Tabs defaultActiveKey="1" items={tabs} />
+            <Tabs defaultActiveKey={tab ?? '1'} items={tabs} />
         </Card>
     )
 }

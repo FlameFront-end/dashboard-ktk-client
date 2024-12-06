@@ -3,6 +3,8 @@ import { Form, Input, Button, Upload, message, Card, type UploadFile } from 'ant
 import { UploadOutlined } from '@ant-design/icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'antd/es/form/Form'
+import { pathsConfig } from '@/pathsConfig'
+import { useCreateLessonsMutation } from '../../api/lessons.api.ts'
 
 interface LessonData {
     title: string
@@ -16,34 +18,40 @@ const CreateLesson: FC = () => {
     const { state } = useLocation()
     const navigate = useNavigate()
 
-    const date = state.date
+    const date: string = state.date
+    const groupId: string = state.groupId
+    const disciplineId: string = state.disciplineId
+
+    console.log('date', date)
+
+    const [createLesson] = useCreateLessonsMutation()
 
     const [fileList, setFileList] = useState<UploadFile[]>([])
 
-    const onFinish = async (values: LessonData): Promise<void> => {
-        try {
-            const data = {
-                title: values.title,
-                description: values.description,
-                files: fileList,
-                date
-            }
-
-            console.log('data', data)
-        } catch (error) {
-            void message.error('Ошибка при создании лекции')
-        }
-    }
-
     const handleFileChange = ({ fileList }: { fileList: UploadFile[] }): void => {
         setFileList(fileList)
+    }
+
+    const onFinish = (values: LessonData): void => {
+        const data = {
+            title: values.title,
+            description: values.description,
+            homework: values.homework,
+            disciplineId,
+            date,
+            files: fileList
+        }
+
+        void createLesson(data).then(() => {
+            void message.success('Лекция успешно создана')
+        })
     }
 
     return (
         <Card title='Создание лекции'>
             <Button
                 type='dashed'
-                onClick={() => { navigate(-1) }}
+                onClick={() => { navigate(pathsConfig.group, { state: { id: groupId, tab: '3' } }) }}
                 style={{ marginBottom: '10px' }}
             >
                 Назад
@@ -51,15 +59,13 @@ const CreateLesson: FC = () => {
             <Form
                 form={form}
                 layout="vertical"
-                onFinish={(data) => {
-                    void onFinish(data)
-                }}
+                onFinish={onFinish}
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Название леакции"
+                    label="Тема лекции"
                     name="title"
-                    rules={[{ required: true, message: 'Введите название леакции' }]}
+                    rules={[{ required: true, message: 'Введите тему леакции' }]}
                 >
                     <Input />
                 </Form.Item>

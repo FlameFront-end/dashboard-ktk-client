@@ -5,7 +5,7 @@ import { BACKEND_URL } from '@/constants'
 export const api = createApi({
     reducerPath: 'base',
     baseQuery: fetchBaseQuery({
-        baseUrl: BACKEND_URL,
+        baseUrl: `${BACKEND_URL}/api`,
         prepareHeaders: (headers) => {
             const token = Cookies.get('token')
             if (token != null) {

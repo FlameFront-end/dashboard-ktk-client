@@ -1,10 +1,10 @@
 import { type FC, useState, type ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button, Table, Tabs } from 'antd'
-import { useGetGroupQuery } from '../../../groups/api/groups.api.ts'
 import moment from 'moment/moment'
 import { Flex } from '@/kit'
-import { useNavigate } from 'react-router-dom'
 import { pathsConfig } from '@/pathsConfig'
+import { useGetGroupQuery } from '../../../groups/api/groups.api.ts'
 
 const { TabPane } = Tabs
 
@@ -13,6 +13,7 @@ const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 interface Props {
     groupId: string
 }
+
 const LessonsTable: FC<Props> = ({ groupId }) => {
     const navigate = useNavigate()
     const { data: group } = useGetGroupQuery(groupId)
@@ -25,29 +26,30 @@ const LessonsTable: FC<Props> = ({ groupId }) => {
 
     const [currentWeekStart, setCurrentWeekStart] = useState(currentWeekStartInitial)
 
-    const generateTableData = (lessons: Collections.Lesson[]): ReactNode => {
-        const allLessonDates = new Set<string>()
-
+    const generateTableData = (lessons: Collections.Lesson[], disciplineId: string): ReactNode => {
+        const uniqueDates = new Set<string>()
         lessons.forEach(lesson => {
-            const lessonDates = weekdays.reduce((acc: moment.Moment[], day: string, index) => {
-                const lessonsForDay = schedule[day as keyof Collections.Schedule]
+            weekdays.forEach((day, index) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                const lessonsForDay = schedule[day]
                 if (Array.isArray(lessonsForDay) && lessonsForDay.some(entry => entry.discipline?.id === lesson.discipline?.id)) {
-                    acc.push(currentWeekStart.clone().day(index + 1))
+                    const date = currentWeekStart.clone().add(index, 'days')
+                    uniqueDates.add(date.toISOString())
                 }
-                return acc
-            }, [])
-
-            lessonDates.forEach(date => allLessonDates.add(date.format('DD.MM')))
+            })
         })
 
+        const lessonDates: moment.Moment[] = [...uniqueDates].map(dateString => moment(dateString))
+
         const columns = [
-            ...Array.from(allLessonDates).map(dateString => ({
-                title: dateString,
-                dataIndex: dateString,
-                key: dateString,
+            ...Array.from(lessonDates).map(date => ({
+                title: date.format('DD.MM'),
+                dataIndex: date.format('DD.MM'),
+                key: date.format('DD.MM'),
                 render: () => (
                     <div>
-                        <Button onClick={() => { handleCreateLesson(dateString) }}>
+                        <Button onClick={() => { handleCreateLesson(date.format('YYYY-MM-DD'), disciplineId) }}>
                             Создать
                         </Button>
                     </div>
@@ -81,8 +83,8 @@ const LessonsTable: FC<Props> = ({ groupId }) => {
         setCurrentWeekStart(currentWeekStart.clone().subtract(1, 'week'))
     }
 
-    const handleCreateLesson = (date: string): void => {
-        navigate(pathsConfig.create_lesson, { state: { date } })
+    const handleCreateLesson = (date: string, disciplineId: string): void => {
+        navigate(pathsConfig.create_lesson, { state: { date, groupId, disciplineId } })
     }
 
     return (
@@ -105,7 +107,7 @@ const LessonsTable: FC<Props> = ({ groupId }) => {
             <Tabs defaultActiveKey="1">
                 {Object.entries(lessonsByDiscipline).map(([disciplineId, lessons]) => (
                     <TabPane tab={lessons[0]?.discipline?.name ?? 'Unnamed Discipline'} key={disciplineId}>
-                        {generateTableData(lessons)}
+                        {generateTableData(lessons, disciplineId)}
                     </TabPane>
                 ))}
             </Tabs>
