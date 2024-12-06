@@ -57,7 +57,7 @@ const CreateLesson: FC = () => {
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Название урока"
+                    label="Название леакции"
                     name="title"
                     rules={[{ required: true, message: 'Введите название леакции' }]}
                 >
