@@ -1,16 +1,16 @@
 import { type FC } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Card } from 'antd'
-import ClassRegisterTable from '../../components/ClassRegisterTable'
+import LessonsTable from '../../components/LessonsTable'
 
-const ClassRegister: FC = () => {
+const Lessons: FC = () => {
     const { state } = useLocation()
 
     return (
         <Card>
-            <ClassRegisterTable groupId={state.id}/>
+            <LessonsTable groupId={state.id}/>
         </Card>
     )
 }
 
-export default ClassRegister
+export default Lessons

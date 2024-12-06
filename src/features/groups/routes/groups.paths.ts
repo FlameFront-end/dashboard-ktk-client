@@ -5,5 +5,6 @@ export const groupsPaths = {
     create_group: '/groups/create',
     edit_group: '/groups/edit',
     performance: '/performance',
-    class_register: '/class_register'
+    lessons: '/lessons',
+    create_lesson: '/lessons/create'
 }

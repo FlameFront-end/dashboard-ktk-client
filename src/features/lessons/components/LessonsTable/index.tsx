@@ -1,8 +1,10 @@
 import { type FC, useState, type ReactNode } from 'react'
 import { Button, Table, Tabs } from 'antd'
-import { useGetGroupQuery } from '../../api/groups.api.ts'
+import { useGetGroupQuery } from '../../../groups/api/groups.api.ts'
 import moment from 'moment/moment'
 import { Flex } from '@/kit'
+import { useNavigate } from 'react-router-dom'
+import { pathsConfig } from '@/pathsConfig'
 
 const { TabPane } = Tabs
 
@@ -11,8 +13,8 @@ const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 interface Props {
     groupId: string
 }
-
-const ClassRegisterTable: FC<Props> = ({ groupId }) => {
+const LessonsTable: FC<Props> = ({ groupId }) => {
+    const navigate = useNavigate()
     const { data: group } = useGetGroupQuery(groupId)
 
     const schedule = group?.schedule ?? { id: '', friday: [], monday: [], tuesday: [], thursday: [], wednesday: [] }
@@ -45,7 +47,9 @@ const ClassRegisterTable: FC<Props> = ({ groupId }) => {
                 key: dateString,
                 render: () => (
                     <div>
-                        {lessons[0].discipline?.name}
+                        <Button onClick={() => { handleCreateLesson(dateString) }}>
+                            Создать
+                        </Button>
                     </div>
                 )
             }))
@@ -77,6 +81,10 @@ const ClassRegisterTable: FC<Props> = ({ groupId }) => {
         setCurrentWeekStart(currentWeekStart.clone().subtract(1, 'week'))
     }
 
+    const handleCreateLesson = (date: string): void => {
+        navigate(pathsConfig.create_lesson, { state: { date } })
+    }
+
     return (
         <>
             <div style={{ marginBottom: '16px' }}>
@@ -104,5 +112,4 @@ const ClassRegisterTable: FC<Props> = ({ groupId }) => {
         </>
     )
 }
-
-export default ClassRegisterTable
+export default LessonsTable

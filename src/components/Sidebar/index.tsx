@@ -33,10 +33,10 @@ const Sidebar: FC = () => {
             onClick: () => { navigate(pathsConfig.performance, { state: { id: groupId } }) }
         },
         {
-            label: 'Классный журнал',
-            key: 'my_class_register',
+            label: 'Лекции',
+            key: 'my_lessons',
             icon: <HomeOutlined />,
-            onClick: () => { navigate(pathsConfig.class_register, { state: { id: groupId } }) }
+            onClick: () => { navigate(pathsConfig.lessons, { state: { id: groupId } }) }
         }
         ] : []),
         {

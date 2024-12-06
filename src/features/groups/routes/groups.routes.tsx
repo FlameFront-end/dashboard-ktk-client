@@ -4,7 +4,8 @@ import Group from '../pages/Group'
 import CreateGroup from '../pages/CreateGroup'
 import EditGroup from '../pages/EditGroup'
 import Performance from '../pages/Performance'
-import ClassRegister from '../pages/ClassRegister'
+import CreateLesson from '../../lessons/pages/CreateLesson'
+import Lessons from '../../lessons/pages/Lessons'
 
 export const groupsRoutes = [
     {
@@ -28,7 +29,11 @@ export const groupsRoutes = [
         element: <Performance/>
     },
     {
-        path: groupsPaths.class_register,
-        element: <ClassRegister/>
+        path: groupsPaths.lessons,
+        element: <Lessons/>
+    },
+    {
+        path: groupsPaths.create_lesson,
+        element: <CreateLesson/>
     }
 ]
