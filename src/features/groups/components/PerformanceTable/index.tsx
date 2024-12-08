@@ -96,7 +96,7 @@ const PerformanceTable: FC<Props> = ({ groupId }) => {
 
     const fetchGrades = async (): Promise<void> => {
         try {
-            const response = await fetch(`http://localhost:3000/groups/${groupId}/grades?weekStart=${currentWeekStart.format('YYYY-MM-DD')}`)
+            const response = await fetch(`http://localhost:3000/api/groups/${groupId}/grades?weekStart=${currentWeekStart.format('YYYY-MM-DD')}`)
             const data = await response.json()
             setGradesData(data)
         } catch (error) {

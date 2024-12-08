@@ -1,10 +1,10 @@
-import { type FC, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import { Form, Input, Button, Upload, message, Card, type UploadFile } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'antd/es/form/Form'
 import { pathsConfig } from '@/pathsConfig'
-import { useCreateLessonsMutation } from '../../api/lessons.api.ts'
+import { useEditLessonMutation, useGetLessonQuery } from '../../api/lessons.api.ts'
 
 interface LessonData {
     title: string
@@ -13,7 +13,7 @@ interface LessonData {
     files?: UploadFile[]
 }
 
-const CreateLesson: FC = () => {
+const EditLesson: FC = () => {
     const [form] = useForm()
     const { state } = useLocation()
     const navigate = useNavigate()
@@ -21,8 +21,10 @@ const CreateLesson: FC = () => {
     const date: string = state.date
     const groupId: string = state.groupId
     const disciplineId: string = state.disciplineId
+    const lessonId: string = state.lessonId
 
-    const [createLesson] = useCreateLessonsMutation()
+    const { data: lesson } = useGetLessonQuery(lessonId)
+    const [editLesson] = useEditLessonMutation()
 
     const [fileList, setFileList] = useState<UploadFile[]>([])
 
@@ -30,8 +32,15 @@ const CreateLesson: FC = () => {
         setFileList(fileList)
     }
 
+    console.log('lesson', lesson)
+
+    useEffect(() => {
+        form.setFieldsValue(lesson)
+    }, [lesson])
+
     const onFinish = (values: LessonData): void => {
         const data = {
+            id: lessonId,
             title: values.title,
             description: values.description,
             homework: values.homework,
@@ -41,14 +50,14 @@ const CreateLesson: FC = () => {
             files: fileList
         }
 
-        void createLesson(data).unwrap().then(() => {
-            void message.success('Лекция успешно создана')
+        void editLesson(data).unwrap().then(() => {
+            void message.success('Лекция успешно измененена')
             navigate(pathsConfig.group, { state: { id: groupId, tab: '3' } })
         })
     }
 
     return (
-        <Card title='Создание лекции'>
+        <Card title='Редактирование лекции'>
             <Button
                 type='dashed'
                 onClick={() => { navigate(pathsConfig.group, { state: { id: groupId, tab: '3' } }) }}
@@ -100,7 +109,7 @@ const CreateLesson: FC = () => {
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        Создать
+                        Изменить
                     </Button>
                 </Form.Item>
             </Form>
@@ -108,4 +117,4 @@ const CreateLesson: FC = () => {
     )
 }
 
-export default CreateLesson
+export default EditLesson

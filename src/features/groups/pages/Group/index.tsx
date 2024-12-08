@@ -9,7 +9,7 @@ import { pathsConfig } from '@/pathsConfig'
 import { EditOutlined } from '@ant-design/icons'
 import PerformanceTable from '../../components/PerformanceTable'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
-import LessonsTable from '../../../lessons/components/LessonsTable'
+import LessonsTable from '../../../lessons/components/LessonsList'
 
 interface DataSourceStudents {
     id: string
