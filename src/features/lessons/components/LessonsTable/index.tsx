@@ -5,6 +5,7 @@ import { pathsConfig } from '@/pathsConfig'
 import { useNavigate } from 'react-router-dom'
 import { Flex } from '@/kit'
 import { EditOutlined } from '@ant-design/icons'
+import { useAppSelector } from '@/hooks'
 
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
@@ -14,10 +15,15 @@ interface Props {
     groupId: string
     currentWeekStart: moment.Moment
     schedule: any
+    teacherId: string | undefined
 }
 
-const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekStart, schedule }) => {
+const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekStart, schedule, teacherId }) => {
     const navigate = useNavigate()
+
+    const role = useAppSelector(state => state.auth.user.role)
+    const myId = useAppSelector(state => state.auth.user.id)
+
     const [lessonsData, setLessonsData] = useState<any[]>([])
 
     const fetchLessons = async (): Promise<void> => {
@@ -72,14 +78,21 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
                             {lesson ? (
                                 <Flex gap={4} alignItems='center' justifyContent='space-between'>
                                     <div style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal' }}>{truncateText(lesson.title)}</div>
-                                    <Button onClick={() => { handleEditLesson(date.format('YYYY-MM-DD'), disciplineId, lesson.id) }}>
-                                        <EditOutlined/>
-                                    </Button>
+
+                                    {(role === 'admin' || myId === teacherId) && (
+                                        <Button onClick={() => { handleEditLesson(date.format('YYYY-MM-DD'), disciplineId, lesson.id) }}>
+                                            <EditOutlined/>
+                                        </Button>
+                                    )}
                                 </Flex>
                             ) : (
-                                <Button onClick={() => { handleCreateLesson(date.format('YYYY-MM-DD'), disciplineId) }}>
-                                    Создать
-                                </Button>
+                                <>
+                                    {(role === 'admin' || myId === teacherId) && (
+                                        <Button onClick={() => { handleCreateLesson(date.format('YYYY-MM-DD'), disciplineId) }}>
+                                          Создать
+                                        </Button>
+                                    )}
+                                </>
                             )}
                         </div>
                     )

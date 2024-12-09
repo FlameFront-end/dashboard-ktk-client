@@ -7,9 +7,11 @@ import { StyledGroupListWrapper } from './GroupList.styled.tsx'
 import { useDeleteGroupMutation, useGetAllGroupsQuery } from '../../api/groups.api.ts'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import { Flex } from '@/kit'
+import { useAppSelector } from '@/hooks'
 
 const AdminDashboard: FC = () => {
     const navigate = useNavigate()
+    const role = useAppSelector(state => state.auth.user.role)
 
     const { data: groups, refetch } = useGetAllGroupsQuery()
     const [deleteGroup] = useDeleteGroupMutation()
@@ -62,7 +64,9 @@ const AdminDashboard: FC = () => {
         <StyledGroupListWrapper>
             <div className="top-row">
                 <Typography.Title level={2}>Все группы</Typography.Title>
-                <Button onClick={() => { navigate(pathsConfig.create_group) }}>Создать группу</Button>
+                {role === 'admin' && (
+                    <Button onClick={() => { navigate(pathsConfig.create_group) }}>Создать группу</Button>
+                )}
             </div>
             <div className='group-list'>
                 {groupedCourses.map(([course, courseGroups]) => (
@@ -85,10 +89,12 @@ const AdminDashboard: FC = () => {
                                             <Link to={pathsConfig.group} state={{ id: group.id }}>
                                                 Страница группы
                                             </Link>
-                                            <ConfirmDelete
-                                                handleDelete={async () => { await handleDelete(group.id) }}
-                                                title='Вы уверены, что хотите удалить эту группу?'
-                                            />
+                                            {role === 'admin' && (
+                                                <ConfirmDelete
+                                                    handleDelete={async () => { await handleDelete(group.id) }}
+                                                    title='Вы уверены, что хотите удалить эту группу?'
+                                                />
+                                            )}
                                         </Flex>
                                     </div>
                                     <ScheduleTable schedule={group.schedule}/>

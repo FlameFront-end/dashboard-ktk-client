@@ -1,6 +1,5 @@
 import { type FC } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useDeleteGroupMutation, useGetGroupQuery } from '../../api/groups.api.ts'
 import { Button, Card, message, Table, Tabs, type TabsProps, Typography } from 'antd'
 import { getDateFormat } from '@/utils'
 import ScheduleTable from '../../../schedule/components/ScheduleTable'
@@ -10,6 +9,8 @@ import { EditOutlined } from '@ant-design/icons'
 import PerformanceTable from '../../components/PerformanceTable'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import LessonsTable from '../../../lessons/components/LessonsList'
+import { useDeleteGroupMutation, useGetGroupQuery } from '../../api/groups.api.ts'
+import { useAppSelector } from '@/hooks'
 
 interface DataSourceStudents {
     id: string
@@ -22,6 +23,9 @@ interface DataSourceStudents {
 const Group: FC = () => {
     const navigate = useNavigate()
     const { state } = useLocation()
+
+    const role = useAppSelector(state => state.auth.user.role)
+    const myId = useAppSelector(state => state.auth.user.id)
 
     const groupId: string = state.id
     const tab: string | undefined = state.tab
@@ -115,13 +119,18 @@ const Group: FC = () => {
                 </div>
 
                 <Flex alignItems='center'>
-                    <Button onClick={() => { navigate(pathsConfig.edit_group, { state: { id: group?.id } }) }}>
-                        <EditOutlined />
-                    </Button>
-                    <ConfirmDelete
-                        handleDelete={handleDelete}
-                        title='Вы уверены, что хотите удалить эту группу?'
-                    />
+                    {myId === group?.teacher?.id && (
+                        <Button onClick={() => { navigate(pathsConfig.edit_group, { state: { id: group?.id } }) }}>
+                            <EditOutlined />
+                        </Button>
+                    )}
+
+                    {role === 'admin' && (
+                        <ConfirmDelete
+                            handleDelete={handleDelete}
+                            title='Вы уверены, что хотите удалить эту группу?'
+                        />
+                    )}
                 </Flex>
             </Flex>
 

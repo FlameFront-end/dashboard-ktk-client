@@ -65,7 +65,14 @@ const LessonsList: FC<Props> = ({ groupId }) => {
             <Tabs defaultActiveKey="1">
                 {Object.entries(lessonsByDiscipline).map(([disciplineId, lessons]) => (
                     <TabPane tab={lessons[0]?.discipline?.name ?? 'Unnamed Discipline'} key={disciplineId}>
-                        <LessonsTable lessons={lessons} disciplineId={disciplineId} groupId={groupId} currentWeekStart={currentWeekStart} schedule={schedule}/>
+                        <LessonsTable
+                            lessons={lessons}
+                            disciplineId={disciplineId}
+                            groupId={groupId}
+                            currentWeekStart={currentWeekStart}
+                            schedule={schedule}
+                            teacherId={group?.teacher?.id}
+                        />
                     </TabPane>
                 ))}
             </Tabs>

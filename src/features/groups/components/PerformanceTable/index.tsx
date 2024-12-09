@@ -4,6 +4,7 @@ import moment from 'moment'
 import { Flex } from '@/kit'
 import { useGetGroupQuery } from '../../api/groups.api.ts'
 import { useCreateGradeMutation } from '../../api/grades.api.ts'
+import { useAppSelector } from '@/hooks'
 
 const grades = ['-', 'n', '2', '3', '4', '5']
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
@@ -21,6 +22,9 @@ interface Props {
 }
 
 const PerformanceTable: FC<Props> = ({ groupId }) => {
+    const role = useAppSelector(state => state.auth.user.role)
+    const myId = useAppSelector(state => state.auth.user.id)
+
     const { data: group } = useGetGroupQuery(groupId)
     const [createGrade] = useCreateGradeMutation()
 
@@ -60,14 +64,18 @@ const PerformanceTable: FC<Props> = ({ groupId }) => {
                 dataIndex: date.format('DD.MM'),
                 key: date.format('DD.MM'),
                 render: (grade: string, record: StudentGradeRecord) => (
-                    <Select
-                        value={grade}
-                        onChange={(value) => { handleGradeChange(value, discipline.id, date.format('YYYY-MM-DD'), record.studentId) }}
-                    >
-                        {grades.map(grade => (
-                            <Select.Option key={grade} value={grade}>{grade}</Select.Option>
-                        ))}
-                    </Select>
+                    <>
+                        {(role === 'admin' || myId === group?.teacher?.id) && (
+                            <Select
+                                value={grade}
+                                onChange={(value) => { handleGradeChange(value, discipline.id, date.format('YYYY-MM-DD'), record.studentId) }}
+                            >
+                                {grades.map(grade => (
+                                    <Select.Option key={grade} value={grade}>{grade}</Select.Option>
+                                ))}
+                            </Select>
+                        )}
+                    </>
                 )
             }))
         ]
@@ -162,7 +170,14 @@ const PerformanceTable: FC<Props> = ({ groupId }) => {
                 />
             )}
 
-            <Button onClick={() => { void sendToServer() }} style={{ width: 'max-content' }}>Сохранить</Button>
+            {(role === 'admin' || myId === group?.teacher?.id) && (
+                <Button
+                    onClick={() => { void sendToServer() }}
+                    style={{ width: 'max-content' }}
+                >
+                  Сохранить
+                </Button>
+            )}
         </Flex>
     )
 }

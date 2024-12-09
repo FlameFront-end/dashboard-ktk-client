@@ -32,8 +32,6 @@ const EditLesson: FC = () => {
         setFileList(fileList)
     }
 
-    console.log('lesson', lesson)
-
     useEffect(() => {
         form.setFieldsValue(lesson)
     }, [lesson])

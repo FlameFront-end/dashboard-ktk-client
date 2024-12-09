@@ -6,6 +6,7 @@ import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import { getDateFormat } from '@/utils'
 import StudentModal from '../../components/StudentModal'
 import { EditOutlined } from '@ant-design/icons'
+import { useAppSelector } from '@/hooks'
 
 interface DataSource {
     id: string
@@ -17,6 +18,8 @@ interface DataSource {
 }
 
 const StudentsList: FC = () => {
+    const role = useAppSelector(state => state.auth.user.role)
+
     const { data: students, isLoading, refetch } = useGetAllStudentsQuery()
     const [deleteStudent] = useDeleteStudentMutation()
 
@@ -108,18 +111,19 @@ const StudentsList: FC = () => {
             title: 'Дата рождения',
             dataIndex: 'birthDate'
         },
-        {
-            title: 'Email',
-            dataIndex: 'email'
-        },
-        {
-            title: 'Телефон',
-            dataIndex: 'phone'
-        },
-        {
+        ...(role === 'teacher' || role === 'admin' ? [
+            {
+                title: 'Email',
+                dataIndex: 'email'
+            },
+            {
+                title: 'Телефон',
+                dataIndex: 'phone'
+            }] : []),
+        ...(role === 'admin' ? [{
             title: 'Действия',
             render: renderActions
-        }
+        }] : [])
     ]
 
     return (
@@ -135,9 +139,11 @@ const StudentsList: FC = () => {
                         onSearch={handleSearch}
                     />
 
-                    <Button onClick={() => { setIsModalVisible(true) }}>
-                        Создать студента
-                    </Button>
+                    {role === 'admin' && (
+                        <Button onClick={() => { setIsModalVisible(true) }}>
+                          Создать студента
+                        </Button>
+                    )}
                 </div>
             </Space>
             <Table<DataSource>

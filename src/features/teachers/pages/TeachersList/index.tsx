@@ -5,6 +5,7 @@ import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import { StyledTeachersListWrapper } from './TeachersList.styled.tsx'
 import TeacherModal from '../../components/TeacherModal'
 import { EditOutlined } from '@ant-design/icons'
+import { useAppSelector } from '@/hooks'
 
 interface DataSource {
     id: string
@@ -15,6 +16,7 @@ interface DataSource {
 }
 
 const TeachersList: FC = () => {
+    const role = useAppSelector(state => state.auth.user.role)
     const { data: teachers, isLoading, refetch } = useGetAllTeachersQuery()
     const [deleteTeacher] = useDeleteTeacherByIdMutation()
 
@@ -105,14 +107,16 @@ const TeachersList: FC = () => {
             title: 'Предмет',
             dataIndex: 'discipline'
         },
-        {
-            title: 'Email',
-            dataIndex: 'email'
-        },
-        {
+        ...(role === 'teacher' || role === 'admin' ? [
+            {
+                title: 'Email',
+                dataIndex: 'email'
+            }
+        ] : []),
+        ...(role === 'admin' ? [{
             title: 'Действия',
             render: renderActions
-        }
+        }] : [])
     ]
 
     return (
@@ -127,10 +131,11 @@ const TeachersList: FC = () => {
                         onChange={(e) => { handleSearch(e.target.value) }}
                         onSearch={handleSearch}
                     />
-
-                    <Button onClick={() => { setIsModalVisible(true) }}>
-                        Создать преподавателя
-                    </Button>
+                    {role === 'admin' && (
+                        <Button onClick={() => { setIsModalVisible(true) }}>
+                          Создать преподавателя
+                        </Button>
+                    )}
                 </div>
             </Space>
             <Table<DataSource>

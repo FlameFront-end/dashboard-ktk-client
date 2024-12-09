@@ -2,11 +2,9 @@ import { type FC } from 'react'
 import { useAuth } from '../../features/auth/hooks/useAuth.ts'
 import { useNavigate } from 'react-router-dom'
 import { pathsConfig } from '@/pathsConfig'
-import { HomeOutlined } from '@ant-design/icons'
 import {
     SidebarContainer,
     MenuItemContainer,
-    MenuItemIcon,
     MenuItemLabel,
     LogoutButton,
     LogoutButtonLabel
@@ -18,43 +16,40 @@ const Sidebar: FC = () => {
     const { logout } = useAuth()
     const navigate = useNavigate()
     const collapsed = false
+    const role = useAppSelector(state => state.auth.user.role)
 
     const menuItems = [
         ...(groupId ? [{
             label: 'Моя группа',
             key: 'my_group',
-            icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.group, { state: { id: groupId } }) }
         },
         {
             label: 'Успеваемость',
             key: 'my_group_performance',
-            icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.performance, { state: { id: groupId } }) }
         },
         {
             label: 'Лекции',
             key: 'my_lessons',
-            icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.lessons, { state: { id: groupId } }) }
         }
         ] : []),
-        {
-            label: 'Все группы',
-            key: 'group_list',
-            icon: <HomeOutlined />,
-            onClick: () => { navigate(pathsConfig.group_list) }
-        },
+        ...(role === 'teacher' || role === 'admin' ? [
+            {
+                label: 'Все группы',
+                key: 'group_list',
+                onClick: () => { navigate(pathsConfig.group_list) }
+            }
+        ] : []),
         {
             label: 'Преподаватели',
             key: 'teachers_list',
-            icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.teachers_list) }
         },
         {
             label: 'Студенты',
             key: 'students_list',
-            icon: <HomeOutlined />,
             onClick: () => { navigate(pathsConfig.students_list) }
         }
     ]
@@ -64,7 +59,6 @@ const Sidebar: FC = () => {
             <div className="menu">
                 {menuItems.map((item) => (
                     <MenuItemContainer key={item.key} onClick={item.onClick}>
-                        <MenuItemIcon>{item.icon}</MenuItemIcon>
                         <MenuItemLabel collapsed={collapsed}>{item.label}</MenuItemLabel>
                     </MenuItemContainer>
                 ))}
