@@ -138,13 +138,15 @@ const TeachersList: FC = () => {
                     )}
                 </div>
             </Space>
-            <Table<DataSource>
-                columns={columns}
-                dataSource={dataSource}
-                pagination={{ pageSize: 5 }}
-                loading={isLoading}
-                rowKey="id"
-            />
+            <div className='table-wrapper'>
+                <Table<DataSource>
+                    columns={columns}
+                    dataSource={dataSource}
+                    pagination={false}
+                    loading={isLoading}
+                    rowKey="id"
+                />
+            </div>
             <TeacherModal
                 open={isModalVisible}
                 onClose={handleModalClose}

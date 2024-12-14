@@ -12,20 +12,6 @@ export const StyledScheduleTableWrapper = styled.div`
     .ant-table {
         min-width: 800px; 
     }
-
-    //.current-day-column {
-    //    border-left: 2px solid green !important;
-    //    border-right: 2px solid green !important;
-    //}
-    //
-    //.current-day-column:last-child {
-    //    border-bottom: 2px solid green !important;
-    //}
-    //
-    //.current-day-column:first-child {
-    //    border-bottom: 2px solid green !important;
-    //}
-    
     
     @media screen and (max-width: 500px){
         .ant-table-cell {

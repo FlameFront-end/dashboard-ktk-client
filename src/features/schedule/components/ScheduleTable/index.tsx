@@ -48,8 +48,7 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
         {
             title: 'Время',
             dataIndex: 'time',
-            key: 'time',
-            fixed: 'left'
+            key: 'time'
         },
         ...daysOfWeek.map(({ en, ru }) => ({
             title: ru,

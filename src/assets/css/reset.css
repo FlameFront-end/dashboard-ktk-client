@@ -40,3 +40,12 @@ ul {
     background-color: #222222 !important;
     color: #e1e3e6 !important;
 }
+
+.table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+
+    .ant-table {
+        min-width: 800px;
+    }
+}

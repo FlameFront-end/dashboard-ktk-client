@@ -11,7 +11,7 @@ export const StyledLayout = styled(Layout)`
     margin: 0 auto;
 
     @media screen and (max-width: 800px) {
-        padding-bottom: 0;
+        padding: 10px;
     }
 `
 

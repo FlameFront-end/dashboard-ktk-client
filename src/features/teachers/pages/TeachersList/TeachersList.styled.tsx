@@ -2,17 +2,16 @@ import styled from 'styled-components'
 import { Card } from 'antd'
 
 export const StyledTeachersListWrapper = styled(Card)`
-    overflow-x: auto;
-    max-width: 100%;
-
-    .ant-table {
-        min-width: 800px;
-    }
-    
     .top-row {
         display: flex;
         justify-content: space-between;
-        gap: 30px;
+        gap: 20px;
         align-items: center;
+        
+        @media screen and (max-width: 600px){
+            flex-direction: column;
+            align-items: start;
+            gap: 10px;
+        }
     }
 `

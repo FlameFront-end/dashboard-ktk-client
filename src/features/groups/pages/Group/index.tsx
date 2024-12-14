@@ -88,13 +88,15 @@ const Group: FC = () => {
             children: (
                 <>
                     <Typography.Title level={5} style={{ marginBottom: '10px' }}>Студенты</Typography.Title>
-                    <Table<DataSourceStudents>
-                        columns={columns}
-                        dataSource={dataSourceStudents}
-                        pagination={{ pageSize: 5 }}
-                        loading={isLoading}
-                        rowKey="id"
-                    />
+                    <div className="table-wrapper">
+                        <Table<DataSourceStudents>
+                            columns={columns}
+                            dataSource={dataSourceStudents}
+                            pagination={false}
+                            loading={isLoading}
+                            rowKey="id"
+                        />
+                    </div>
                 </>
             )
         }
