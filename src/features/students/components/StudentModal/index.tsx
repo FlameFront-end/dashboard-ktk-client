@@ -18,7 +18,7 @@ interface Props {
 
 const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
     const [form] = Form.useForm()
-    const { data: groups } = useGetAllGroupsQuery()
+    const { data: groups } = useGetAllGroupsQuery(false)
     const [createStudent, { isLoading: isLoadingCreate }] = useCreateStudentMutation()
     const [updateStudent, { isLoading: isLoadingUpdate }] = useUpdateStudentMutation()
     const { refetch } = useGetAllStudentsQuery()

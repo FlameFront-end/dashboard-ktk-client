@@ -119,7 +119,7 @@ const Group: FC = () => {
                 </div>
 
                 <Flex alignItems='center'>
-                    {myId === group?.teacher?.id && (
+                    {(role === 'admin' || myId === group?.teacher?.id) && (
                         <Button onClick={() => { navigate(pathsConfig.edit_group, { state: { id: group?.id } }) }}>
                             <EditOutlined />
                         </Button>

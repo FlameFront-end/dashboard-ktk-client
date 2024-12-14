@@ -9,11 +9,11 @@ import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import { Flex } from '@/kit'
 import { useAppSelector } from '@/hooks'
 
-const AdminDashboard: FC = () => {
+const GroupList: FC = () => {
     const navigate = useNavigate()
     const role = useAppSelector(state => state.auth.user.role)
 
-    const { data: groups, refetch } = useGetAllGroupsQuery()
+    const { data: groups, refetch } = useGetAllGroupsQuery(true)
     const [deleteGroup] = useDeleteGroupMutation()
 
     const [activeKeys, setActiveKeys] = useState<string[]>([])
@@ -83,7 +83,7 @@ const AdminDashboard: FC = () => {
                                     <div className='collapse-top'>
                                         <div className='left'>
                                             <div>Классный руководитель: {group.teacher?.name ?? '-'}</div>
-                                            <div>Расписание</div>
+                                            {group.schedule && <div>Расписание</div>}
                                         </div>
                                         <Flex alignItems='center'>
                                             <Link to={pathsConfig.group} state={{ id: group.id }}>
@@ -97,7 +97,9 @@ const AdminDashboard: FC = () => {
                                             )}
                                         </Flex>
                                     </div>
-                                    <ScheduleTable schedule={group.schedule}/>
+
+                                    {group.schedule && <ScheduleTable schedule={group.schedule}/>}
+
                                 </Collapse.Panel>
                             ))}
                         </Collapse>
@@ -108,4 +110,4 @@ const AdminDashboard: FC = () => {
     )
 }
 
-export default AdminDashboard
+export default GroupList

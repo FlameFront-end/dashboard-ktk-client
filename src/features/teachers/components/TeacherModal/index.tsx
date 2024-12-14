@@ -46,6 +46,7 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                 await updateTeacher({ id: teacher.id, ...values }).unwrap()
                 void message.success('Преподаватель успешно изменён')
             } else {
+                console.log('values', values)
                 await createTeacher(values).unwrap()
                 void message.success('Данные для входа отправлены преподавателю на почту')
             }

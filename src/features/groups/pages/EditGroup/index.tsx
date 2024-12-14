@@ -35,6 +35,14 @@ const UpdateGroup: FC = () => {
     })
 
     useEffect(() => {
+        if (group) {
+            form.setFieldsValue({
+                name: group.name,
+                teacher: group.teacher?.id,
+                students: group.students?.map((student) => student.id)
+            })
+        }
+
         if (group?.schedule) {
             const initialSchedule: Record<string, Array<{ discipline: any, teacher: any, cabinet: string }>> = {
                 monday: [],
@@ -45,6 +53,7 @@ const UpdateGroup: FC = () => {
             }
 
             daysOfWeek.forEach(({ en }) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-expect-error
                 initialSchedule[en] = (group?.schedule[en] || []).map(subject => ({
                     discipline: subject.discipline || null,
@@ -54,12 +63,6 @@ const UpdateGroup: FC = () => {
             })
 
             setSchedule(initialSchedule)
-
-            form.setFieldsValue({
-                name: group.name,
-                teacher: group.teacher?.id,
-                students: group.students?.map((student) => student.id)
-            })
         }
     }, [group, form])
 

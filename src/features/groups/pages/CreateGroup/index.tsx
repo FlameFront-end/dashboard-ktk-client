@@ -13,7 +13,7 @@ import { useGetAllTeachersQuery, useGetAllTeachersWithoutGroupQuery } from '../.
 const CreateGroup: FC = () => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
-    const { refetch } = useGetAllGroupsQuery()
+    const { refetch } = useGetAllGroupsQuery(true)
     const { data: teachers } = useGetAllTeachersQuery()
     const { data: classroomTeachers } = useGetAllTeachersWithoutGroupQuery()
     const { data: students } = useGetAllStudentsWithoutTeacherQuery()
