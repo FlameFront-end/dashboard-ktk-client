@@ -5,6 +5,7 @@ import { Flex } from '@/kit'
 import { useGetGroupQuery } from '../../api/groups.api.ts'
 import { useCreateGradeMutation } from '../../api/grades.api.ts'
 import { useAppSelector } from '@/hooks'
+import { BACKEND_URL } from '@/constants'
 
 const grades = ['-', 'n', '2', '3', '4', '5']
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
@@ -104,7 +105,7 @@ const PerformanceTable: FC<Props> = ({ groupId }) => {
 
     const fetchGrades = async (): Promise<void> => {
         try {
-            const response = await fetch(`http://localhost:3000/api/groups/${groupId}/grades?weekStart=${currentWeekStart.format('YYYY-MM-DD')}`)
+            const response = await fetch(`${BACKEND_URL}/api/groups/${groupId}/grades?weekStart=${currentWeekStart.format('YYYY-MM-DD')}`)
             const data = await response.json()
             setGradesData(data)
         } catch (error) {

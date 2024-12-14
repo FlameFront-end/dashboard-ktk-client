@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Flex } from '@/kit'
 import { EditOutlined } from '@ant-design/icons'
 import { useAppSelector } from '@/hooks'
+import { BACKEND_URL } from '@/constants'
 
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
@@ -28,7 +29,7 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
 
     const fetchLessons = async (): Promise<void> => {
         try {
-            const response = await fetch(`http://localhost:3000/api/lessons/${groupId}/${disciplineId}`)
+            const response = await fetch(`${BACKEND_URL}/api/lessons/${groupId}/${disciplineId}`)
             const data = await response.json()
             setLessonsData(data)
         } catch (error) {
