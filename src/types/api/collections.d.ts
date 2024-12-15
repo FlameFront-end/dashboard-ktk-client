@@ -63,4 +63,12 @@ declare namespace Collections {
         createdAt: string
         updatedAt: string
     }
+
+    interface Admin {
+        id: string
+        name: string
+        email: string
+        createdAt: string
+        updatedAt: string
+    }
 }

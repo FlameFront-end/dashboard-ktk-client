@@ -58,6 +58,14 @@ const Sidebar: FC = () => {
             path: pathsConfig.students_list,
             onClick: () => { navigate(pathsConfig.students_list) }
         },
+        ...(role === 'teacher' || role === 'admin' ? [
+            {
+                label: 'Администаторы',
+                key: 'admins_list',
+                path: pathsConfig.admins_list,
+                onClick: () => { navigate(pathsConfig.admins_list) }
+            }
+        ] : []),
         ...(role === 'admin' ? [
             {
                 label: 'Дисциплины',
