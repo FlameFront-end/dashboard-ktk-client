@@ -1,6 +1,5 @@
-import { type FC, useEffect, useState } from 'react'
-import { Form, Input, Button, Upload, message, Card, type UploadFile } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import { type FC, useEffect } from 'react'
+import { Form, Input, Button, message, Card, type UploadFile } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'antd/es/form/Form'
 import { pathsConfig } from '@/pathsConfig'
@@ -26,12 +25,6 @@ const EditLesson: FC = () => {
     const { data: lesson } = useGetLessonQuery(lessonId)
     const [editLesson] = useEditLessonMutation()
 
-    const [fileList, setFileList] = useState<UploadFile[]>([])
-
-    const handleFileChange = ({ fileList }: { fileList: UploadFile[] }): void => {
-        setFileList(fileList)
-    }
-
     useEffect(() => {
         form.setFieldsValue(lesson)
     }, [lesson])
@@ -45,7 +38,7 @@ const EditLesson: FC = () => {
             disciplineId,
             groupId,
             date,
-            files: fileList
+            files: []
         }
 
         void editLesson(data).unwrap().then(() => {
@@ -91,19 +84,19 @@ const EditLesson: FC = () => {
                     <Input.TextArea />
                 </Form.Item>
 
-                <Form.Item label="Файлы">
-                    <Upload
-                        listType="picture-card"
-                        fileList={fileList}
-                        onChange={(file) => {
-                            handleFileChange(file)
-                        }}
-                    >
-                        <Button>
-                            <UploadOutlined />
-                        </Button>
-                    </Upload>
-                </Form.Item>
+                {/* <Form.Item label="Файлы"> */}
+                {/*     <Upload */}
+                {/*         listType="picture-card" */}
+                {/*         fileList={fileList} */}
+                {/*         onChange={(file) => { */}
+                {/*             handleFileChange(file) */}
+                {/*         }} */}
+                {/*     > */}
+                {/*         <Button> */}
+                {/*             <UploadOutlined /> */}
+                {/*         </Button> */}
+                {/*     </Upload> */}
+                {/* </Form.Item> */}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">

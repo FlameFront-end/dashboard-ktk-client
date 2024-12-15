@@ -1,6 +1,5 @@
-import { type FC, useState } from 'react'
-import { Form, Input, Button, Upload, message, Card, type UploadFile } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import { type FC } from 'react'
+import { Form, Input, Button, message, Card, type UploadFile } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'antd/es/form/Form'
 import { pathsConfig } from '@/pathsConfig'
@@ -24,12 +23,6 @@ const CreateLesson: FC = () => {
 
     const [createLesson] = useCreateLessonsMutation()
 
-    const [fileList, setFileList] = useState<UploadFile[]>([])
-
-    const handleFileChange = ({ fileList }: { fileList: UploadFile[] }): void => {
-        setFileList(fileList)
-    }
-
     const onFinish = (values: LessonData): void => {
         const data = {
             title: values.title,
@@ -38,7 +31,7 @@ const CreateLesson: FC = () => {
             disciplineId,
             groupId,
             date,
-            files: fileList
+            files: []
         }
 
         void createLesson(data).unwrap().then(() => {
@@ -84,19 +77,19 @@ const CreateLesson: FC = () => {
                     <Input.TextArea />
                 </Form.Item>
 
-                <Form.Item label="Файлы">
-                    <Upload
-                        listType="picture-card"
-                        fileList={fileList}
-                        onChange={(file) => {
-                            handleFileChange(file)
-                        }}
-                    >
-                        <Button>
-                            <UploadOutlined />
-                        </Button>
-                    </Upload>
-                </Form.Item>
+                {/* <Form.Item label="Файлы"> */}
+                {/*     <Upload */}
+                {/*         listType="picture-card" */}
+                {/*         fileList={fileList} */}
+                {/*         onChange={(file) => { */}
+                {/*             handleFileChange(file) */}
+                {/*         }} */}
+                {/*     > */}
+                {/*         <Button> */}
+                {/*             <UploadOutlined /> */}
+                {/*         </Button> */}
+                {/*     </Upload> */}
+                {/* </Form.Item> */}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
