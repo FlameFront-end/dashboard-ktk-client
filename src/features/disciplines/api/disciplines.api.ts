@@ -14,11 +14,35 @@ export const disciplinesApi = api.injectEndpoints({
                 url: '/disciplines',
                 method: 'GET'
             })
+        }),
+        getDisciplineById: builder.query<Collections.Discipline, string>({
+            query: (id) => ({
+                url: `/disciplines/${id}`,
+                method: 'GET'
+            })
+        }),
+        deleteDiscipline: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `/disciplines/${id}`,
+                method: 'DELETE'
+            })
+        }),
+        updateDiscipline: builder.mutation<Collections.Discipline, { id: string, name: string }>({
+            query: ({ id, name }) => ({
+                url: `/disciplines/${id}`,
+                method: 'PATCH',
+                body: {
+                    name
+                }
+            })
         })
     })
 })
 
 export const {
     useCreateDisciplineMutation,
-    useGetAllDisciplinesQuery
+    useGetAllDisciplinesQuery,
+    useLazyGetDisciplineByIdQuery,
+    useDeleteDisciplineMutation,
+    useUpdateDisciplineMutation
 } = disciplinesApi

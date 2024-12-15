@@ -12,7 +12,7 @@ const RouterProtect: FC = () => {
 
     const user = useAppSelector(state => state.auth.user)
 
-    if (!isAuth && (pathname !== pathsConfig.login && pathname !== pathsConfig.register)) {
+    if (!isAuth && (pathname !== pathsConfig.login)) {
         return <Navigate to={pathsConfig.login} replace />
     }
 

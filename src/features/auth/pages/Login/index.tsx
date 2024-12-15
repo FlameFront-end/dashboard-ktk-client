@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useLoginMutation } from '../../api/auth.api'
 import type { LoginPayload } from '../../types/login.types'
 import { Card } from '@/kit'
-
-import { StyledAuthWrapper } from '../styled/Auth.styled.tsx'
+import { StyledAuthWrapper } from './Login.styled.tsx'
 import { pathsConfig } from '@/pathsConfig'
 
 const Login: FC = () => {
@@ -47,30 +46,24 @@ const Login: FC = () => {
                 >
                     <Form.Item
                         className='form-item'
-                        label='Email'
+                        label='Почта'
                         name='email'
                         hasFeedback
                         validateDebounce={600}
                         rules={[
-                            { required: true, message: 'Please input your email!' },
-                            { type: 'email', message: 'The input is not valid email!' }
+                            { required: true, message: 'Пожалуйста, введите свой адрес электронной почты!' },
+                            { type: 'email', message: 'Введенный адрес электронной почты неверен!' }
                         ]}
                     >
                         <Input/>
                     </Form.Item>
                     <Form.Item
-                        label='Password'
+                        label='Пароль'
                         name='password'
                         hasFeedback
                         validateDebounce={600}
                         rules={[
-                            {
-                                validator: async (_, value) => {
-                                    if (value === undefined || value === '') {
-                                        await Promise.reject(new Error('Please input your password!'))
-                                    }
-                                }
-                            }
+                            { required: true, message: 'Пожалуйста, введите свой пароль!' }
                         ]}
                     >
                         <Input.Password/>
@@ -81,10 +74,6 @@ const Login: FC = () => {
                             Войти
                         </Button>
                     </Form.Item>
-
-                    {/* <label> */}
-                    {/*     Ещё не зарегстрированы? <TextButton onClick={() => { navigate(authPaths.register) }}>Регистрация</TextButton> */}
-                    {/* </label> */}
                 </Form>
             </Card>
         </StyledAuthWrapper>

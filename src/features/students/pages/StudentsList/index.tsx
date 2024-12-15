@@ -69,7 +69,7 @@ const StudentsList: FC = () => {
         setIsModalVisible(true)
     }
 
-    function renderActions(record: DataSource): ReactNode {
+    const renderActions = (record: DataSource): ReactNode => {
         const student = students?.find(item => item.id === record.id)
 
         if (!student) {

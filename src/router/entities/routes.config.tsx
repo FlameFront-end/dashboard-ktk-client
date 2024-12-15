@@ -7,6 +7,7 @@ import { groupsRoutes } from '../../features/groups/routes/groups.routes.tsx'
 import { studentsRoutes } from '../../features/students/routes/students.routes.tsx'
 import { teachersRoutes } from '../../features/teachers/routes/teachers.routes.tsx'
 import { lessonsRoutes } from '../../features/lessons/routes/lessons.routes.tsx'
+import { disciplinesRoutes } from '../../features/disciplines/routes/disciplines.routes.tsx'
 
 export const routesConfig = [
     {
@@ -20,7 +21,8 @@ export const routesConfig = [
                     ...groupsRoutes,
                     ...studentsRoutes,
                     ...teachersRoutes,
-                    ...lessonsRoutes
+                    ...lessonsRoutes,
+                    ...disciplinesRoutes
                 ]
             },
             ...authRoutes

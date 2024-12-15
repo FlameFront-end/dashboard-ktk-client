@@ -1,16 +1,19 @@
 import styled from 'styled-components'
 
 interface Props {
-    collapsed: boolean
     theme: 'dark' | 'light'
 }
 
 export const SidebarContainer = styled.div<Props>`
     background-color: ${({ theme }) => theme.background};
     transition: width 0.3s;
-    width: ${({ collapsed }) => (collapsed ? '80px' : '170px')};
+    width: 170px;
     border-right: none;
     padding-top: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 
     @media screen and (max-width: 800px) {
         display: none;
@@ -26,23 +29,19 @@ export const MenuItemContainer = styled.div`
     color: ${({ theme }) => theme.text};
     border-radius: 10px;
 
-    &:hover {
+    &:hover, &.active {
         background-color: ${({ theme }) => theme.hover};
     }
 `
 
-export const MenuItemIcon = styled.div`
-    margin-right: 16px;
-`
-
 export const MenuItemLabel = styled.div<Props>`
-    display: ${({ collapsed }) => (collapsed ? 'none' : 'block')};
+    display: block;
 `
 
 export const LogoutButton = styled.button<Props>`
-    width: ${({ collapsed }) => (collapsed ? 40 : 160)}px;
-    margin: 15px 20px;
+    width: 100%;
     display: flex;
+    margin-top: 10px;
     gap: 10px;
     align-items: center;
     justify-content: center;
@@ -56,6 +55,6 @@ export const LogoutButton = styled.button<Props>`
 `
 
 export const LogoutButtonLabel = styled.div<Props>`
-    display: ${({ collapsed }) => (collapsed ? 'none' : 'block')};
+    display: block;
     color: ${({ theme }) => (theme === 'dark' ? '#f0f0f0' : '#ffffff')};
 `

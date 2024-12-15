@@ -5,9 +5,10 @@ import { DeleteOutlined } from '@ant-design/icons'
 interface Props {
     title: string
     handleDelete: () => Promise<void>
+    isLoading?: boolean
 }
 
-const ConfirmDelete: FC<Props> = ({ title, handleDelete }) => {
+const ConfirmDelete: FC<Props> = ({ title, handleDelete, isLoading = false }) => {
     return (
         <Popconfirm
             title={title}
@@ -37,6 +38,7 @@ const ConfirmDelete: FC<Props> = ({ title, handleDelete }) => {
             <Button
                 type="text"
                 icon={<DeleteOutlined />}
+                loading={isLoading}
                 danger
                 style={{
                     color: '#e1e3e6',
