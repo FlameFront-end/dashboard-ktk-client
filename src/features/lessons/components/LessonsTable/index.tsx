@@ -46,13 +46,6 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
         return null
     }
 
-    const truncateText = (text: string, maxLength: number = 50): string => {
-        if (text.length <= maxLength) {
-            return text
-        }
-        return text.substring(0, maxLength - 3) + '...'
-    }
-
     const generateTableData = (lessons: Collections.Lesson[]): ReactNode => {
         const uniqueDates = new Set<string>()
         lessons.forEach(lesson => {
@@ -75,10 +68,14 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
                 render: () => {
                     const lesson = findLessonByDate(date.format('YYYY-MM-DD'))
                     return (
-                        <div>
+                        <div style={{ maxWidth: '300px' }}>
                             {lesson ? (
-                                <Flex gap={4} alignItems='center' justifyContent='space-between'>
-                                    <div style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal' }}>{truncateText(lesson.title)}</div>
+                                <Flex gap={4} alignItems='start' justifyContent='space-between'>
+                                    <Flex direction="column">
+                                        <div>Название: {lesson.title}</div>
+                                        <div>Описание: {lesson.description}</div>
+                                        <div>Домашне задание: {lesson.homework}</div>
+                                    </Flex>
 
                                     {(role === 'admin' || myId === teacherId) && (
                                         <Button onClick={() => { handleEditLesson(date.format('YYYY-MM-DD'), disciplineId, lesson.id) }}>
