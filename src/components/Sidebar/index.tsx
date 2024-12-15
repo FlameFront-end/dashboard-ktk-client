@@ -10,6 +10,7 @@ import {
     LogoutButtonLabel
 } from './Sidebar.styled'
 import { useAppSelector } from '@/hooks'
+import { useGetChatByGroupIdQuery } from '../../features/chat/api/chat.api.ts'
 
 const Sidebar: FC = () => {
     const groupId = useAppSelector(state => state.auth.user.groupId)
@@ -17,6 +18,12 @@ const Sidebar: FC = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const role = useAppSelector(state => state.auth.user.role)
+
+    const { data: chat } = useGetChatByGroupIdQuery(groupId ?? '', {
+        skip: !groupId
+    })
+
+    console.log('chat', chat)
 
     const menuItems = [
         ...(groupId ? [{
@@ -36,13 +43,16 @@ const Sidebar: FC = () => {
             key: 'my_lessons',
             path: pathsConfig.lessons,
             onClick: () => { navigate(pathsConfig.lessons, { state: { id: groupId } }) }
-        },
-        {
-            label: 'Чат группы',
-            key: 'chat',
-            path: pathsConfig.chat,
-            onClick: () => { navigate(pathsConfig.chat) }
         }
+        ] : []),
+
+        ...(chat?.id ? [
+            {
+                label: 'Чат группы',
+                key: 'chat',
+                path: pathsConfig.chat,
+                onClick: () => { navigate(pathsConfig.chat, { state: { id: chat.id } }) }
+            }
         ] : []),
 
         ...(role === 'teacher' || role === 'admin' ? [

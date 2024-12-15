@@ -78,4 +78,11 @@ declare namespace Collections {
         createdAt: string
         sender: Student
     }
+
+    interface Chat {
+        id: string
+        groupId: string
+        createdAt: string
+        updatedAt: string
+    }
 }

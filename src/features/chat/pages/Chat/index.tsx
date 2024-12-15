@@ -4,14 +4,17 @@ import { io, type Socket } from 'socket.io-client'
 import { BACKEND_URL } from '@/constants'
 import { chatActions, fetchChatInfo } from '../../store/chat.slice.ts'
 import { useAppDispatch, useAppSelector } from '@/hooks'
+import { useLocation } from 'react-router-dom'
 
 const Chat: FC = () => {
+    const { state } = useLocation()
+    const chatId: string = state.id
+
     const userId = useAppSelector((state) => state.auth.user.id)
     const dispatch = useAppDispatch()
     const chat = useAppSelector((state) => state.chat)
 
     const [newMessage, setNewMessage] = useState('')
-    const [chatId] = useState<string | null>('6b271f3c-3e8f-4694-875b-5d62143cd503')
     const socketRef = useRef<Socket | null>(null)
 
     const handleMessageChange = (e: ChangeEvent<HTMLInputElement>): void => {
