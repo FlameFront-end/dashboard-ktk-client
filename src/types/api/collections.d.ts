@@ -71,4 +71,11 @@ declare namespace Collections {
         createdAt: string
         updatedAt: string
     }
+
+    interface Message {
+        senderId: string
+        text: string
+        createdAt: string
+        sender: Student
+    }
 }

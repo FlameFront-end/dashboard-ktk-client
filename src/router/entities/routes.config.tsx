@@ -9,6 +9,7 @@ import { teachersRoutes } from '../../features/teachers/routes/teachers.routes.t
 import { lessonsRoutes } from '../../features/lessons/routes/lessons.routes.tsx'
 import { disciplinesRoutes } from '../../features/disciplines/routes/disciplines.routes.tsx'
 import { adminsRoutes } from '../../features/admins/routes/admins.routes.tsx'
+import { chatRoutes } from '../../features/chat/routes/chat.routes.tsx'
 
 export const routesConfig = [
     {
@@ -24,7 +25,8 @@ export const routesConfig = [
                     ...teachersRoutes,
                     ...lessonsRoutes,
                     ...disciplinesRoutes,
-                    ...adminsRoutes
+                    ...adminsRoutes,
+                    ...chatRoutes
                 ]
             },
             ...authRoutes

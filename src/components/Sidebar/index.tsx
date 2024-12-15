@@ -36,8 +36,15 @@ const Sidebar: FC = () => {
             key: 'my_lessons',
             path: pathsConfig.lessons,
             onClick: () => { navigate(pathsConfig.lessons, { state: { id: groupId } }) }
+        },
+        {
+            label: 'Чат группы',
+            key: 'chat',
+            path: pathsConfig.chat,
+            onClick: () => { navigate(pathsConfig.chat) }
         }
         ] : []),
+
         ...(role === 'teacher' || role === 'admin' ? [
             {
                 label: 'Все группы',
@@ -46,6 +53,7 @@ const Sidebar: FC = () => {
                 onClick: () => { navigate(pathsConfig.group_list) }
             }
         ] : []),
+
         {
             label: 'Преподаватели',
             key: 'teachers_list',
@@ -58,6 +66,7 @@ const Sidebar: FC = () => {
             path: pathsConfig.students_list,
             onClick: () => { navigate(pathsConfig.students_list) }
         },
+
         ...(role === 'teacher' || role === 'admin' ? [
             {
                 label: 'Администаторы',
@@ -66,6 +75,7 @@ const Sidebar: FC = () => {
                 onClick: () => { navigate(pathsConfig.admins_list) }
             }
         ] : []),
+
         ...(role === 'admin' ? [
             {
                 label: 'Дисциплины',

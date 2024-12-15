@@ -5,6 +5,7 @@ import { teachersPaths } from '../../features/teachers/routes/teachers.paths.ts'
 import { lessonsPaths } from '../../features/lessons/routes/lessons.paths.ts'
 import { disciplinesPaths } from '../../features/disciplines/routes/disciplines.paths.ts'
 import { adminsPaths } from '../../features/admins/routes/admins.paths.ts'
+import { chatPaths } from '../../features/chat/routes/chat.paths.ts'
 
 export const pathsConfig = {
     root: '/',
@@ -14,5 +15,6 @@ export const pathsConfig = {
     ...teachersPaths,
     ...lessonsPaths,
     ...disciplinesPaths,
-    ...adminsPaths
+    ...adminsPaths,
+    ...chatPaths
 }
