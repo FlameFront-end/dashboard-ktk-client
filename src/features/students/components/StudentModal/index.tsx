@@ -18,9 +18,11 @@ interface Props {
 
 const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
     const [form] = Form.useForm()
-    const { data: groups } = useGetAllGroupsQuery(false)
+    const { data: groups, refetch: refetchGroups } = useGetAllGroupsQuery(false)
+
     const [createStudent, { isLoading: isLoadingCreate }] = useCreateStudentMutation()
     const [updateStudent, { isLoading: isLoadingUpdate }] = useUpdateStudentMutation()
+
     const { refetch } = useGetAllStudentsQuery()
 
     useEffect(() => {
@@ -68,6 +70,10 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
             }
         }
     }
+
+    useEffect(() => {
+        void refetchGroups()
+    }, [])
 
     return (
         <Modal

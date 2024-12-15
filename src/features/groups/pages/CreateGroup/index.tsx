@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Select, Tabs, Button, message, Space, Card } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
@@ -14,10 +14,10 @@ const CreateGroup: FC = () => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
     const { refetch } = useGetAllGroupsQuery(true)
-    const { data: teachers } = useGetAllTeachersQuery()
-    const { data: classroomTeachers } = useGetAllTeachersWithoutGroupQuery()
-    const { data: students } = useGetAllStudentsWithoutTeacherQuery()
-    const { data: disciplines } = useGetAllDisciplinesQuery()
+    const { data: teachers, refetch: refetchTeachers } = useGetAllTeachersQuery()
+    const { data: classroomTeachers, refetch: refetchClassroomTeachers } = useGetAllTeachersWithoutGroupQuery()
+    const { data: students, refetch: refetchStudents } = useGetAllStudentsWithoutTeacherQuery()
+    const { data: disciplines, refetch: refetchDisciplines } = useGetAllDisciplinesQuery()
 
     const [createGroup, { isLoading }] = useCreateGroupMutation()
 
@@ -73,6 +73,13 @@ const CreateGroup: FC = () => {
             void message.error('Ошибка при создании группы')
         }
     }
+
+    useEffect(() => {
+        void refetchTeachers()
+        void refetchClassroomTeachers()
+        void refetchDisciplines()
+        void refetchStudents()
+    }, [])
 
     return (
         <Card title='Создание группы'>

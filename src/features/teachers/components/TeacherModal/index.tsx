@@ -18,8 +18,8 @@ interface Props {
 
 const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
     const [form] = Form.useForm()
-    const { data: groups } = useGetAllGroupsWithoutTeacherQuery()
-    const { data: disciplines } = useGetAllDisciplinesQuery()
+    const { data: groups, refetch: refetchGroups } = useGetAllGroupsWithoutTeacherQuery()
+    const { data: disciplines, refetch: refetchDisciplines } = useGetAllDisciplinesQuery()
 
     const [createTeacher, { isLoading: isLoadingCreate }] = useCreateTeacherMutation()
     const [updateTeacher, { isLoading: isLoadingUpdate }] = useUpdateTeacherMutation()
@@ -46,7 +46,6 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                 await updateTeacher({ id: teacher.id, ...values }).unwrap()
                 void message.success('Преподаватель успешно изменён')
             } else {
-                console.log('values', values)
                 await createTeacher(values).unwrap()
                 void message.success('Данные для входа отправлены преподавателю на почту')
             }
@@ -66,6 +65,11 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
             }
         }
     }
+
+    useEffect(() => {
+        void refetchGroups()
+        void refetchDisciplines()
+    }, [])
 
     return (
         <Modal
@@ -106,12 +110,13 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                         }
-                        options={disciplines?.map((lesson) => ({
-                            value: lesson.id,
-                            label: lesson.name
+                        options={disciplines?.map((discipline) => ({
+                            value: discipline.id,
+                            label: discipline.name
                         }))}
                     />
                 </Form.Item>
+
                 <Form.Item
                     name="group"
                     label="Группа"

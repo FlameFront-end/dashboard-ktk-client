@@ -76,7 +76,8 @@ declare namespace Collections {
         senderId: string
         text: string
         createdAt: string
-        sender: Student
+        teacherSender: Teacher | null
+        studentSender: Teacher | null
     }
 
     interface Chat {

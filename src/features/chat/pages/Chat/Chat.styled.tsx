@@ -1,0 +1,50 @@
+import styled from 'styled-components'
+
+export const StyledChatWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+
+    .message-list {
+        flex: 1; 
+        overflow-y: auto; 
+        padding: 10px;
+    }
+
+    .message-left, .message-right {
+        margin-bottom: 10px; 
+    }
+
+    .message-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .message-right .ant-list-item-meta {
+        text-align: right;
+    }
+
+    .message-right .ant-list-item-meta-avatar {
+        order: 1;
+        margin-right: 0; 
+        margin-left: 10px;
+    }
+
+    .chat-input-area {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .chat-input {
+        flex: 1;
+        margin-right: 10px;
+    }
+    
+    .ant-avatar {
+        font-size: 16px;  
+        color: white;
+        background-color: #1890ff; 
+    }
+`

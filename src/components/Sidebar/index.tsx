@@ -23,8 +23,6 @@ const Sidebar: FC = () => {
         skip: !groupId
     })
 
-    console.log('chat', chat)
-
     const menuItems = [
         ...(groupId ? [{
             label: 'Моя группа',
