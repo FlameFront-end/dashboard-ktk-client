@@ -14,10 +14,11 @@ import { useGetChatByGroupIdQuery } from '../../features/chat/api/chat.api.ts'
 
 const Sidebar: FC = () => {
     const groupId = useAppSelector(state => state.auth.user.groupId)
+    const role = useAppSelector(state => state.auth.user.role)
+
     const { logout } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
-    const role = useAppSelector(state => state.auth.user.role)
 
     const { data: chat } = useGetChatByGroupIdQuery(groupId ?? '', {
         skip: !groupId

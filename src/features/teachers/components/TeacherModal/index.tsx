@@ -18,7 +18,7 @@ interface Props {
 
 const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
     const [form] = Form.useForm()
-    const { data: groups, refetch: refetchGroups } = useGetAllGroupsQuery()
+    const { data: groups, refetch: refetchGroups } = useGetAllGroupsQuery(false)
     const { data: disciplines, refetch: refetchDisciplines } = useGetAllDisciplinesQuery()
 
     const [createTeacher, { isLoading: isLoadingCreate }] = useCreateTeacherMutation()
