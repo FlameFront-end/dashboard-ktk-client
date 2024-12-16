@@ -32,7 +32,7 @@ export const studentsApi = api.injectEndpoints({
                 method: 'GET'
             })
         }),
-        getAllStudentsWithoutTeacher: builder.query<Collections.Student[], | void>({
+        getAllStudentsWithoutGroup: builder.query<Collections.Student[], | void>({
             query: () => '/students/without-group'
         }),
         getStudentById: builder.query<Collections.Student, string>({
@@ -44,6 +44,12 @@ export const studentsApi = api.injectEndpoints({
         deleteStudent: builder.mutation<void, string>({
             query: (id) => ({
                 url: `/students/${id}`,
+                method: 'DELETE'
+            })
+        }),
+        deleteStudentFromGroup: builder.mutation<Collections.Student, string>({
+            query: (id) => ({
+                url: `/students/${id}/group`,
                 method: 'DELETE'
             })
         }),
@@ -60,8 +66,9 @@ export const studentsApi = api.injectEndpoints({
 export const {
     useCreateStudentMutation,
     useGetAllStudentsQuery,
-    useGetAllStudentsWithoutTeacherQuery,
+    useGetAllStudentsWithoutGroupQuery,
     useGetStudentByIdQuery,
     useDeleteStudentMutation,
+    useDeleteStudentFromGroupMutation,
     useUpdateStudentMutation
 } = studentsApi

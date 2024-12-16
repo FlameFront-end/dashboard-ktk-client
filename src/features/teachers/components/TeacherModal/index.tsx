@@ -7,7 +7,7 @@ import {
     useUpdateTeacherMutation
 } from '../../api/teachers.api.ts'
 import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
-import { useGetAllGroupsWithoutTeacherQuery } from '../../../groups/api/groups.api.ts'
+import { useGetAllGroupsQuery } from '../../../groups/api/groups.api.ts'
 
 interface Props {
     open: boolean
@@ -18,7 +18,7 @@ interface Props {
 
 const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
     const [form] = Form.useForm()
-    const { data: groups, refetch: refetchGroups } = useGetAllGroupsWithoutTeacherQuery()
+    const { data: groups, refetch: refetchGroups } = useGetAllGroupsQuery()
     const { data: disciplines, refetch: refetchDisciplines } = useGetAllDisciplinesQuery()
 
     const [createTeacher, { isLoading: isLoadingCreate }] = useCreateTeacherMutation()

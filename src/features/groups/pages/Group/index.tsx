@@ -1,6 +1,6 @@
-import { type FC } from 'react'
+import { type FC, type ReactNode, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Button, Card, message, Table, Tabs, type TabsProps, Typography } from 'antd'
+import { Button, Card, message, Space, Table, Tabs, type TabsProps, Typography } from 'antd'
 import { getDateFormat } from '@/utils'
 import ScheduleTable from '../../../schedule/components/ScheduleTable'
 import { Flex } from '@/kit'
@@ -11,6 +11,7 @@ import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import LessonsTable from '../../../lessons/components/LessonsList'
 import { useDeleteGroupMutation, useGetGroupQuery } from '../../api/groups.api.ts'
 import { useAppSelector } from '@/hooks'
+import { useDeleteStudentFromGroupMutation } from '../../../students/api/students.api.ts'
 
 interface DataSourceStudents {
     id: string
@@ -31,7 +32,12 @@ const Group: FC = () => {
     const tab: string | undefined = state.tab
 
     const [deleteGroup] = useDeleteGroupMutation()
-    const { data: group, isLoading } = useGetGroupQuery(groupId)
+    const [deleteStudentFromGroup] = useDeleteStudentFromGroupMutation()
+    const { data: group, isLoading, refetch } = useGetGroupQuery(groupId)
+
+    useEffect(() => {
+        void refetch()
+    }, [])
 
     const dataSourceStudents: DataSourceStudents[] = group?.students?.map(record => ({
         id: record?.id ?? '-',
@@ -41,6 +47,43 @@ const Group: FC = () => {
         phone: record?.phone ?? '-',
         email: record?.email ?? '-'
     })) ?? []
+
+    const handleDeleteGroup = async (): Promise<void> => {
+        try {
+            await deleteGroup(groupId).unwrap()
+            void message.success('Группа удалена')
+            navigate(pathsConfig.group_list)
+        } catch (error) {
+            void message.error('Ошибка при удалении группы')
+        }
+    }
+
+    const handleDeleteStudentFromGroup = async (id: string): Promise<void> => {
+        try {
+            await deleteStudentFromGroup(id).unwrap()
+            void message.success('Студент исключён из группы')
+            void refetch()
+        } catch (error) {
+            void message.error('Ошибка при удалении группы')
+        }
+    }
+
+    const renderActions = (record: DataSourceStudents): ReactNode => {
+        const student = group?.students?.find(item => item.id === record.id)
+
+        if (!student) {
+            return null
+        }
+
+        return (
+            <Space>
+                <ConfirmDelete
+                    handleDelete={async () => { await handleDeleteStudentFromGroup(student.id) }}
+                    title='Вы уверены, что хотите исключить этого студента из группы?'
+                />
+            </Space>
+        )
+    }
 
     const columns = [
         {
@@ -58,7 +101,11 @@ const Group: FC = () => {
         {
             title: 'Телефон',
             dataIndex: 'phone'
-        }
+        },
+        ...(role === 'teacher' || role === 'admin' ? [{
+            title: 'Действия',
+            render: renderActions
+        }] : [])
     ]
 
     const tabs: TabsProps['items'] = [
@@ -102,16 +149,6 @@ const Group: FC = () => {
         }
     ]
 
-    const handleDelete = async (): Promise<void> => {
-        try {
-            await deleteGroup(groupId).unwrap()
-            void message.success('Группа удалена')
-            navigate(pathsConfig.group_list)
-        } catch (error) {
-            void message.error('Ошибка при удалении группы')
-        }
-    }
-
     return (
         <Card>
             <Flex justifyContent='space-between'>
@@ -129,7 +166,7 @@ const Group: FC = () => {
 
                     {role === 'admin' && (
                         <ConfirmDelete
-                            handleDelete={handleDelete}
+                            handleDelete={handleDeleteGroup}
                             title='Вы уверены, что хотите удалить эту группу?'
                         />
                     )}

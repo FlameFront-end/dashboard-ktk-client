@@ -7,7 +7,8 @@ import { useGetAllTeachersQuery } from '../../../teachers/api/teachers.api'
 import { useGetAllStudentsQuery } from '../../../students/api/students.api'
 import {
     type UpdateGroupPayload,
-    useGetGroupQuery, useUpdateGroupMutation
+    useGetGroupQuery,
+    useUpdateGroupMutation
 } from '../../api/groups.api.ts'
 import { daysOfWeek } from '@/constants'
 import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
@@ -19,12 +20,18 @@ const UpdateGroup: FC = () => {
 
     const [form] = Form.useForm()
 
-    const { data: teachers } = useGetAllTeachersQuery()
-    const { data: students } = useGetAllStudentsQuery()
-    const { data: disciplines } = useGetAllDisciplinesQuery()
+    const { data: teachers, refetch: refetchTeachers } = useGetAllTeachersQuery()
+    const { data: students, refetch: refetchStudents } = useGetAllStudentsQuery()
+    const { data: disciplines, refetch: refetchDisciplines } = useGetAllDisciplinesQuery()
     const { data: group, refetch } = useGetGroupQuery(state.id)
 
     const [updateGroup, { isLoading }] = useUpdateGroupMutation()
+
+    useEffect(() => {
+        void refetchTeachers()
+        void refetchStudents()
+        void refetchDisciplines()
+    }, [])
 
     const [schedule, setSchedule] = useState<Record<string, any[]>>({
         monday: [],

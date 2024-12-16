@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Form, Input, Select, Tabs, Button, message, Space, Card } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import { Flex } from '@/kit'
-import { useGetAllStudentsWithoutTeacherQuery } from '../../../students/api/students.api'
+import { useGetAllStudentsWithoutGroupQuery } from '../../../students/api/students.api'
 import { type CreateGroupPayload, useCreateGroupMutation, useGetAllGroupsQuery } from '../../api/groups.api.ts'
 import { daysOfWeek } from '@/constants'
 import { pathsConfig } from '@/pathsConfig'
@@ -16,7 +16,7 @@ const CreateGroup: FC = () => {
     const { refetch } = useGetAllGroupsQuery(true)
     const { data: teachers, refetch: refetchTeachers } = useGetAllTeachersQuery()
     const { data: classroomTeachers, refetch: refetchClassroomTeachers } = useGetAllTeachersWithoutGroupQuery()
-    const { data: students, refetch: refetchStudents } = useGetAllStudentsWithoutTeacherQuery()
+    const { data: students, refetch: refetchStudents } = useGetAllStudentsWithoutGroupQuery()
     const { data: disciplines, refetch: refetchDisciplines } = useGetAllDisciplinesQuery()
 
     const [createGroup, { isLoading }] = useCreateGroupMutation()
