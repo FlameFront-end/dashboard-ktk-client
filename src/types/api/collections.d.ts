@@ -86,4 +86,12 @@ declare namespace Collections {
         createdAt: string
         updatedAt: string
     }
+
+    interface Lesson {
+        id: string
+        homework: string
+        description: string
+        title: string
+        date: string
+    }
 }

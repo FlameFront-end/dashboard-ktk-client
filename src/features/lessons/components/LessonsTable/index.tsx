@@ -1,12 +1,13 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import moment from 'moment'
-import { Button, message, Table } from 'antd'
+import { Button, message, Table, Typography } from 'antd'
 import { pathsConfig } from '@/pathsConfig'
 import { useNavigate } from 'react-router-dom'
 import { Flex } from '@/kit'
 import { EditOutlined } from '@ant-design/icons'
 import { useAppSelector } from '@/hooks'
 import { BACKEND_URL } from '@/constants'
+import ReactMarkdown from 'react-markdown'
 
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
@@ -25,7 +26,7 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
     const role = useAppSelector(state => state.auth.user.role)
     const myId = useAppSelector(state => state.auth.user.id)
 
-    const [lessonsData, setLessonsData] = useState<any[]>([])
+    const [lessonsData, setLessonsData] = useState<Collections.Lesson[]>([])
 
     const fetchLessons = async (): Promise<void> => {
         try {
@@ -66,15 +67,30 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
                 dataIndex: date.format('DD.MM'),
                 key: date.format('DD.MM'),
                 render: () => {
-                    const lesson = findLessonByDate(date.format('YYYY-MM-DD'))
+                    const lesson = findLessonByDate(date.format('YYYY-MM-DD')) as Collections.Lesson
                     return (
-                        <div style={{ maxWidth: '300px' }}>
+                        <div style={{ width: '300px', minHeight: '100%' }}>
                             {lesson ? (
-                                <Flex gap={4} alignItems='start' justifyContent='space-between'>
+                                <Flex gap={0} alignItems='start' justifyContent='space-between'>
                                     <Flex direction="column">
-                                        <div>Название: {lesson.title}</div>
-                                        <div>Описание: {lesson.description}</div>
-                                        <div>Домашне задание: {lesson.homework}</div>
+                                        <Typography.Paragraph style={{ margin: 0 }}>
+                                            <b>Название:</b> <br/>
+                                            <ReactMarkdown>
+                                                {lesson.title}
+                                            </ReactMarkdown>
+                                        </Typography.Paragraph>
+                                        <Typography.Paragraph style={{ margin: 0 }}>
+                                            <b>Описание:</b> <br/>
+                                            <ReactMarkdown>
+                                                {lesson.description}
+                                            </ReactMarkdown>
+                                        </Typography.Paragraph>
+                                        <Typography.Paragraph style={{ margin: 0 }}>
+                                            <b>Домашнее задание:</b> <br/>
+                                            <ReactMarkdown>
+                                                {lesson.homework}
+                                            </ReactMarkdown>
+                                        </Typography.Paragraph>
                                     </Flex>
 
                                     {(role === 'admin' || myId === teacherId) && (
@@ -98,7 +114,7 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
             }))
         ]
 
-        return <Table columns={columns} dataSource={[{ title: 'Задания' }]} pagination={false} scroll={{ x: true }}/>
+        return <Table columns={columns} dataSource={[{ title: 'Задания' }]} pagination={false}/>
     }
 
     const handleCreateLesson = (date: string, disciplineId: string): void => {
@@ -114,9 +130,9 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
     }, [groupId, disciplineId])
 
     return (
-        <>
+        <div className='table-wrapper'>
             {generateTableData(lessons)}
-        </>
+        </div>
     )
 }
 
