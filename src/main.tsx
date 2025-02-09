@@ -30,14 +30,14 @@ message.config({
 
 root.render(
     <Provider store={store}>
-        <ThemeProvider theme={darkTheme}>
-            <ConfigProvider theme={antdTheme} locale={ru_RU}>
-                <App>
+        <ConfigProvider theme={antdTheme} locale={ru_RU}>
+            <App>
+                <ThemeProvider theme={darkTheme}>
                     <ToastContainer autoClose={2000} theme='dark'/>
                     <RouterProvider />
-                </App>
-            </ConfigProvider>
-        </ThemeProvider>
+                </ThemeProvider>
+            </App>
+        </ConfigProvider>
     </Provider>
 )
 

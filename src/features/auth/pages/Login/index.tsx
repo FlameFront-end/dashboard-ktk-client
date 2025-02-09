@@ -1,7 +1,6 @@
 import { type FC } from 'react'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import { useAppAction } from '@/hooks'
-import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { useLoginMutation } from '../../api/auth.api'
 import type { LoginPayload } from '../../types/login.types'
@@ -23,10 +22,10 @@ const Login: FC = () => {
             const result = response?.data
             setUser(result)
             form.resetFields()
-            toast.success('Успешный вход в аккаунт')
+            void message.success('Успешный вход в аккаунт')
             navigate(pathsConfig.group_list)
         } else {
-            toast.error('Что-то пошло не так')
+            void message.error('Что-то пошло не так')
         }
     }
 

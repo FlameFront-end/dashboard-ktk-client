@@ -42,7 +42,7 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
             title: '№',
             dataIndex: 'index',
             key: 'index',
-            width: 50,
+            width: 20,
             align: 'center'
         },
         {
@@ -55,13 +55,13 @@ const ScheduleTable: FC<Props> = ({ schedule }) => {
             dataIndex: en,
             key: en,
             onCell: (record: TableRow) => ({
-                className: currentCell?.day === en && currentCell?.time === record.time ? 'highlight-cell' : ''
+                className: currentCell?.day.toLowerCase() === ru.toLowerCase() && currentCell?.time === record.time ? 'highlight-cell' : ''
             }),
             render: (lesson: Collections.Lesson | undefined) => {
                 if (!lesson) return '—'
 
                 return (
-                    <div style={{ marginBottom: '8px' }}>
+                    <div>
                         <strong>{lesson.discipline?.name}</strong>
                         <div>Учитель: {lesson.teacher?.name}</div>
                         <div>Кабинет: {lesson.cabinet}</div>

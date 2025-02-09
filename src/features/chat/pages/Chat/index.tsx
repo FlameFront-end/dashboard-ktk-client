@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type FC, type ChangeEvent } from 'react'
+import { useState, useEffect, useRef, type FC, type ChangeEvent, type MutableRefObject, useCallback } from 'react'
 import { Input, List, Avatar, Button } from 'antd'
 import { io, type Socket } from 'socket.io-client'
 import { SendOutlined } from '@ant-design/icons'
@@ -20,8 +20,10 @@ const Chat: FC = () => {
     const chat = useAppSelector((state) => state.chat)
 
     const [newMessage, setNewMessage] = useState('')
+    const [testCount, setTestCount] = useState(0)
+
     const socketRef = useRef<Socket | null>(null)
-    const messagesEndRef = useRef<HTMLDivElement>(null)
+    const messagesListRef: MutableRefObject<HTMLDivElement | null> = useRef(null)
 
     const handleMessageChange = (e: ChangeEvent<HTMLInputElement>): void => {
         setNewMessage(e.target.value)
@@ -46,6 +48,13 @@ const Chat: FC = () => {
         dispatch(chatActions.addMessage(message))
     }
 
+    const scrollToBottom = useCallback((behavior: 'smooth' | 'auto') => {
+        messagesListRef.current?.scrollTo({
+            top: messagesListRef.current.scrollHeight,
+            behavior
+        })
+    }, [])
+
     useEffect(() => {
         const socket = io(BACKEND_URL, { query: { userId } })
         socketRef.current = socket
@@ -68,10 +77,6 @@ const Chat: FC = () => {
     }, [])
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [chat.messages])
-
-    useEffect(() => {
         if (socketRef.current) {
             socketRef.current?.emit('joinRoom', { chatId })
         }
@@ -81,9 +86,23 @@ const Chat: FC = () => {
         }
     }, [socketRef.current, chatId])
 
+    useEffect(() => {
+        if (testCount === 0) {
+            scrollToBottom('auto')
+            setTimeout(() => {
+                setTestCount(1)
+            }, 10)
+        } else {
+            if (chat.messages.length) {
+                scrollToBottom('smooth')
+            }
+        }
+    }, [chat.messages.length, scrollToBottom])
+
     return (
         <StyledChatWrapper>
             <List
+                ref={messagesListRef}
                 className="message-list"
                 itemLayout="horizontal"
                 dataSource={chat.messages}
@@ -111,7 +130,7 @@ const Chat: FC = () => {
                     }
                 }}
             />
-            <div className="chat-input-area" >
+            <div className="chat-input-area">
                 <Input
                     className="chat-input"
                     value={newMessage}
@@ -121,7 +140,6 @@ const Chat: FC = () => {
                 />
                 <Button className="send-button" type="primary" icon={<SendOutlined />} onClick={sendMessage} />
             </div>
-            <div ref={messagesEndRef} />
         </StyledChatWrapper>
     )
 }

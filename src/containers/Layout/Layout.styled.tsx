@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Layout } from 'antd'
 
 export const StyledLayout = styled(Layout)`
-    min-height: 100vh;
+    min-height: calc(100vh - 64px);
     max-width: calc(1120px + 200px + 50px);
     display: flex;
     gap: 16px;
