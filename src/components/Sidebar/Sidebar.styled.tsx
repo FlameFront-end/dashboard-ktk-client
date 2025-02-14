@@ -5,6 +5,8 @@ interface Props {
 }
 
 export const SidebarContainer = styled.div<Props>`
+    position: sticky;
+    bottom: 0;
     background-color: ${({ theme }) => theme.background};
     transition: width 0.3s;
     width: 170px;

@@ -66,7 +66,7 @@ const PerformanceTable: FC<Props> = ({ groupId }) => {
                 key: date.format('DD.MM'),
                 render: (grade: string, record: StudentGradeRecord) => (
                     <>
-                        {(role === 'admin' || myId === group?.teacher?.id) && (
+                        {(role === 'admin' || myId === group?.teacher?.id) ? (
                             <Select
                                 value={grade}
                                 onChange={(value) => { handleGradeChange(value, discipline.id, date.format('YYYY-MM-DD'), record.studentId) }}
@@ -75,6 +75,10 @@ const PerformanceTable: FC<Props> = ({ groupId }) => {
                                     <Select.Option key={grade} value={grade}>{grade}</Select.Option>
                                 ))}
                             </Select>
+                        ) : (
+                            <div>
+                                {grade}
+                            </div>
                         )}
                     </>
                 )
