@@ -101,11 +101,11 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
                                 </Flex>
                             ) : (
                                 <>
-                                    {(role === 'admin' || myId === teacherId) && (
+                                    {(role === 'admin' || myId === teacherId) ? (
                                         <Button onClick={() => { handleCreateLesson(date.format('YYYY-MM-DD'), disciplineId) }}>
                                           Создать
                                         </Button>
-                                    )}
+                                    ) : <div>-</div>}
                                 </>
                             )}
                         </div>
