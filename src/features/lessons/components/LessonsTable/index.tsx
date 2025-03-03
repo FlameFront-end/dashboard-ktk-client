@@ -47,6 +47,18 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
         return null
     }
 
+    const handleCreateLesson = (date: string, disciplineId: string): void => {
+        navigate(pathsConfig.create_lesson, { state: { date, groupId, disciplineId } })
+    }
+
+    const handleEditLesson = (date: string, disciplineId: string, lessonId: string): void => {
+        navigate(pathsConfig.edit_lesson, { state: { date, groupId, disciplineId, lessonId } })
+    }
+
+    useEffect(() => {
+        void fetchLessons()
+    }, [groupId, disciplineId])
+
     const generateTableData = (lessons: Collections.Lesson[]): ReactNode => {
         const uniqueDates = new Set<string>()
         lessons.forEach(lesson => {
@@ -103,7 +115,7 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
                                 <>
                                     {(role === 'admin' || myId === teacherId) ? (
                                         <Button onClick={() => { handleCreateLesson(date.format('YYYY-MM-DD'), disciplineId) }}>
-                                          Создать
+                                      Создать
                                         </Button>
                                     ) : <div>-</div>}
                                 </>
@@ -116,18 +128,6 @@ const LessonsTable: FC<Props> = ({ lessons, disciplineId, groupId, currentWeekSt
 
         return <Table columns={columns} dataSource={[{ title: 'Задания' }]} pagination={false}/>
     }
-
-    const handleCreateLesson = (date: string, disciplineId: string): void => {
-        navigate(pathsConfig.create_lesson, { state: { date, groupId, disciplineId } })
-    }
-
-    const handleEditLesson = (date: string, disciplineId: string, lessonId: string): void => {
-        navigate(pathsConfig.edit_lesson, { state: { date, groupId, disciplineId, lessonId } })
-    }
-
-    useEffect(() => {
-        void fetchLessons()
-    }, [groupId, disciplineId])
 
     return (
         <div className='table-wrapper'>

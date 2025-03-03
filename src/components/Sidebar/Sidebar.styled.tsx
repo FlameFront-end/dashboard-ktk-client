@@ -9,7 +9,7 @@ export const SidebarContainer = styled.div<Props>`
     bottom: 0;
     background-color: ${({ theme }) => theme.background};
     transition: width 0.3s;
-    width: 170px;
+    width: 190px;
     border-right: none;
     padding-top: 20px;
 

@@ -6,7 +6,7 @@ interface CreateGradePayload {
     weekStart: string
 }
 
-export const groupsApi = api.injectEndpoints({
+export const performanceApi = api.injectEndpoints({
     endpoints: (builder) => ({
         getAllGroups: builder.query<any, void>({
             query: () => '/groups'
@@ -24,4 +24,4 @@ export const groupsApi = api.injectEndpoints({
 
 export const {
     useCreateGradeMutation
-} = groupsApi
+} = performanceApi

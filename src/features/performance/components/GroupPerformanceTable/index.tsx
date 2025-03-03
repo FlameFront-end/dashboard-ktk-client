@@ -2,10 +2,10 @@ import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { Table, Select, Button, message, Tabs } from 'antd'
 import moment from 'moment'
 import { Flex } from '@/kit'
-import { useGetGroupQuery } from '../../api/groups.api.ts'
-import { useCreateGradeMutation } from '../../api/grades.api.ts'
 import { useAppSelector } from '@/hooks'
 import { BACKEND_URL } from '@/constants'
+import { useGetGroupQuery } from '../../../groups/api/groups.api.ts'
+import { useCreateGradeMutation } from '../../api/performance.api.ts'
 
 const grades = ['-', 'n', '2', '3', '4', '5']
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
@@ -22,7 +22,7 @@ interface Props {
     groupId: string
 }
 
-const PerformanceTable: FC<Props> = ({ groupId }) => {
+const GroupPerformanceTable: FC<Props> = ({ groupId }) => {
     const role = useAppSelector(state => state.auth.user.role)
     const myId = useAppSelector(state => state.auth.user.id)
 
@@ -187,4 +187,4 @@ const PerformanceTable: FC<Props> = ({ groupId }) => {
     )
 }
 
-export default PerformanceTable
+export default GroupPerformanceTable

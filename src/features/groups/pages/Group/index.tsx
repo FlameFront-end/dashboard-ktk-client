@@ -6,12 +6,12 @@ import ScheduleTable from '../../../schedule/components/ScheduleTable'
 import { Flex } from '@/kit'
 import { pathsConfig } from '@/pathsConfig'
 import { EditOutlined } from '@ant-design/icons'
-import PerformanceTable from '../../components/PerformanceTable'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import LessonsTable from '../../../lessons/components/LessonsList'
 import { useDeleteGroupMutation, useGetGroupQuery } from '../../api/groups.api.ts'
 import { useAppSelector } from '@/hooks'
 import { useDeleteStudentFromGroupMutation } from '../../../students/api/students.api.ts'
+import GroupPerformanceTable from '../../../performance/components/GroupPerformanceTable'
 
 interface DataSourceStudents {
     id: string
@@ -122,7 +122,7 @@ const Group: FC = () => {
         {
             key: '2',
             label: 'Успеваемость',
-            children: <PerformanceTable groupId={groupId}/>
+            children: <GroupPerformanceTable groupId={groupId}/>
         },
         {
             key: '3',

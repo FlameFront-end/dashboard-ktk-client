@@ -13,8 +13,9 @@ import { useAppSelector } from '@/hooks'
 import { useGetChatByGroupIdQuery } from '../../features/chat/api/chat.api.ts'
 
 const Sidebar: FC = () => {
-    const groupId = useAppSelector(state => state.auth.user.groupId)
     const role = useAppSelector(state => state.auth.user.role)
+    const groupId = useAppSelector(state => state.auth.user.groupId)
+    const userId = useAppSelector(state => state.auth.user.id)
 
     const { logout } = useAuth()
     const navigate = useNavigate()
@@ -32,11 +33,21 @@ const Sidebar: FC = () => {
             onClick: () => { navigate(pathsConfig.group, { state: { id: groupId } }) }
         },
         {
-            label: 'Успеваемость',
+            label: 'Успеваемость группы',
             key: 'my_group_performance',
-            path: pathsConfig.performance,
-            onClick: () => { navigate(pathsConfig.performance, { state: { id: groupId } }) }
+            path: pathsConfig.group_performance,
+            onClick: () => { navigate(pathsConfig.group_performance, { state: { id: groupId } }) }
         },
+
+        ...(role === 'student' ? [
+            {
+                label: 'Моя успеваемость',
+                key: 'chat',
+                path: pathsConfig.individual_performance,
+                onClick: () => { navigate(pathsConfig.individual_performance, { state: { id: userId } }) }
+            }
+        ] : []),
+
         {
             label: 'Лекции',
             key: 'my_lessons',

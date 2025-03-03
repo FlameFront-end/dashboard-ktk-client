@@ -6,6 +6,7 @@ import { lessonsPaths } from '../../features/lessons/routes/lessons.paths.ts'
 import { disciplinesPaths } from '../../features/disciplines/routes/disciplines.paths.ts'
 import { adminsPaths } from '../../features/admins/routes/admins.paths.ts'
 import { chatPaths } from '../../features/chat/routes/chat.paths.ts'
+import { performancePaths } from '../../features/performance/routes/performance.paths.ts'
 
 export const pathsConfig = {
     root: '/',
@@ -16,5 +17,6 @@ export const pathsConfig = {
     ...lessonsPaths,
     ...disciplinesPaths,
     ...adminsPaths,
-    ...chatPaths
+    ...chatPaths,
+    ...performancePaths
 }
