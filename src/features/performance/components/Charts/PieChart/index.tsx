@@ -13,17 +13,11 @@ ChartJS.register(
     Legend
 )
 
-interface Grade {
-    id: string
-    grade: string
-    date: string
+interface Props {
+    grades: Collections.Grade[]
 }
 
-interface PieChartProps {
-    data: Grade[]
-}
-
-const PieChart: FC<PieChartProps> = ({ data }) => {
+const PieChart: FC<Props> = ({ grades }) => {
     const gradeCounts = {
         2: 0,
         3: 0,
@@ -31,7 +25,7 @@ const PieChart: FC<PieChartProps> = ({ data }) => {
         5: 0
     }
 
-    data.forEach((grade) => {
+    grades.forEach((grade) => {
         gradeCounts[grade.grade as unknown as keyof typeof gradeCounts]++
     })
 

@@ -21,21 +21,15 @@ ChartJS.register(
     Legend
 )
 
-interface Grade {
-    id: string
-    grade: string
-    date: string
+interface Props {
+    grades: Collections.Grade[]
 }
 
-interface LineChartProps {
-    data: Grade[]
-}
-
-const LineChart: FC<LineChartProps> = ({ data }) => {
+const LineChart: FC<Props> = ({ grades }) => {
     let totalSum = 0
     let totalCount = 0
 
-    const sortedGrades = [...data].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    const sortedGrades = [...grades].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
     const cumulativeData = sortedGrades.map(({ date, grade }) => {
         totalSum += Number(grade)

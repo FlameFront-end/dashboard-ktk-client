@@ -94,4 +94,17 @@ declare namespace Collections {
         title: string
         date: string
     }
+
+    interface Grade {
+        id: string
+        grade: string
+        date: string
+    }
+
+    interface DisciplineGrades {
+        discipline: string
+        grades: Grade[]
+    }
+
+    type StudentGrades = DisciplineGrades[]
 }

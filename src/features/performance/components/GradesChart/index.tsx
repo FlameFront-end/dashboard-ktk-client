@@ -3,29 +3,19 @@ import { StyledGradesChartWrapper } from './GradesChart.styled.tsx'
 import LineChart from '../Charts/LineChart'
 import PieChart from '../Charts/PieChart'
 
-interface Grade {
-    id: string
-    grade: string
-    date: string
-}
-
-type SubjectGrades = Record<string, Grade[]>
-
 interface Props {
-    data: SubjectGrades
+    data: Collections.DisciplineGrades
 }
 
 const GradesChart: FC<Props> = ({ data }) => {
-    const grades = Object.values(data)[0]
-
     return (
         <StyledGradesChartWrapper>
             <div className='item'>
-                <LineChart data={grades} />
+                <LineChart grades={data.grades} />
             </div>
 
             <div className='item'>
-                <PieChart data={grades} />
+                <PieChart grades={data.grades} />
             </div>
         </StyledGradesChartWrapper>
     )

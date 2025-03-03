@@ -8,14 +8,16 @@ interface CreateGradePayload {
 
 export const performanceApi = api.injectEndpoints({
     endpoints: (builder) => ({
-        getAllGroups: builder.query<any, void>({
-            query: () => '/groups'
-        }),
         createGrade: builder.mutation<any, CreateGradePayload>({
             query: (body) => ({
                 url: '/groups/grades',
                 method: 'POST',
                 body
+            })
+        }),
+        getAllGradesFromStudent: builder.query<Collections.StudentGrades, string>({
+            query: (id) => ({
+                url: `/students/${id}/grades`
             })
         })
 
@@ -23,5 +25,6 @@ export const performanceApi = api.injectEndpoints({
 })
 
 export const {
-    useCreateGradeMutation
+    useCreateGradeMutation,
+    useGetAllGradesFromStudentQuery
 } = performanceApi
