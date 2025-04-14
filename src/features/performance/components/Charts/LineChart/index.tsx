@@ -10,6 +10,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js'
+import { getDateFormat } from '@/utils'
 
 ChartJS.register(
     CategoryScale,
@@ -38,7 +39,7 @@ const LineChart: FC<Props> = ({ grades }) => {
     })
 
     const chartData = {
-        labels: cumulativeData.map(d => d.date),
+        labels: cumulativeData.map(d => getDateFormat(d.date)),
         datasets: [
             {
                 label: 'Средняя оценка',

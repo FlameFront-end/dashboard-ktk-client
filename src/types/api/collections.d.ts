@@ -72,12 +72,21 @@ declare namespace Collections {
         updatedAt: string
     }
 
+    interface SenderMessage {
+        email: string
+        id: string
+        name: string
+        phone: string | null
+    }
+
+    export type SenderType = 'student' | 'teacher' | 'system'
+
+
     interface Message {
-        senderId: string
         text: string
         createdAt: string
-        teacherSender: Teacher | null
-        studentSender: Teacher | null
+        sender: SenderMessage
+        senderType: SenderType
     }
 
     interface Chat {

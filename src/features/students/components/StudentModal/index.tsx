@@ -1,7 +1,6 @@
 import { type FC, useEffect } from 'react'
 import { Button, DatePicker, Input, Modal, Form, message, Select } from 'antd'
 import {
-    type StudentCreatePayload,
     useCreateStudentMutation,
     useGetAllStudentsQuery,
     useUpdateStudentMutation
@@ -14,6 +13,14 @@ interface Props {
     onClose: () => void
     onSuccess: () => void
     student: Collections.Student | null
+}
+
+interface CreateValues {
+    birthDate: string
+    email: string
+    group: string
+    name: string
+    phone?: string | undefined
 }
 
 const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
@@ -39,18 +46,19 @@ const StudentModal: FC<Props> = ({ open, onClose, onSuccess, student }) => {
         }
     }, [student])
 
-    const handleSubmit = async (values: StudentCreatePayload): Promise<void> => {
+    const handleSubmit = async (values: CreateValues): Promise<void> => {
+
         try {
-            const formattedValues: StudentCreatePayload = { ...values }
+            const formattedValues = { ...values }
             if (values.birthDate) {
                 formattedValues.birthDate = dayjs(values.birthDate).format('DD.MM.YYYY')
             }
 
             if (student) {
-                await updateStudent({ id: student.id, ...formattedValues }).unwrap()
+                await updateStudent({ id: student.id, name: formattedValues.name,  groupId: formattedValues.group, birthDate: formattedValues.birthDate, phone: formattedValues.phone, email: formattedValues.email  }).unwrap()
                 void message.success('Студент успешно изменён')
             } else {
-                await createStudent(formattedValues).unwrap()
+                await createStudent({ name: formattedValues.name,  groupId: formattedValues.group, birthDate: formattedValues.birthDate, phone: formattedValues.phone, email: formattedValues.email  }).unwrap()
                 void message.success('Данные для входа отправлены студенту на почту')
             }
 

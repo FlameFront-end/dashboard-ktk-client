@@ -2,19 +2,19 @@ import { api } from '@/core'
 
 export interface StudentCreatePayload {
     name: string
-    group: string
-    birthDate?: string
+    groupId: string
+    birthDate: string
     phone?: string
-    email?: string
+    email: string
 }
 
 export interface StudentUpdatePayload {
     id: string
     name: string
-    group: string
-    birthDate?: string
+    groupId: string
+    birthDate: string
     phone?: string
-    email?: string
+    email: string
 }
 
 export const studentsApi = api.injectEndpoints({

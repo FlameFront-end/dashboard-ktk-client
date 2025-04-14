@@ -68,9 +68,12 @@ const Chat: FC = () => {
         void fetch()
 
         socket.on('newMessage', handleNewMessage)
+        socket.on('participantUpdate', handleNewMessage)
 
         return () => {
             socket.off('newMessage', handleNewMessage)
+            socket.off('participantUpdate', handleNewMessage)
+
             socket.emit('leaveRoom', { chatId })
             socket.disconnect()
         }
@@ -99,6 +102,7 @@ const Chat: FC = () => {
         }
     }, [chat.messages.length, scrollToBottom])
 
+
     return (
         <StyledChatWrapper>
             <List
@@ -106,29 +110,15 @@ const Chat: FC = () => {
                 className="message-list"
                 itemLayout="horizontal"
                 dataSource={chat.messages}
-                renderItem={(item) => {
-                    if (item.teacherSender) {
-                        return (
-                            <List.Item className={item.teacherSender.id === userId ? 'message-right' : 'message-left'}>
-                                <List.Item.Meta
-                                    avatar={<Avatar>{item.teacherSender.name.charAt(0)}</Avatar>}
-                                    title={item.teacherSender.name}
-                                    description={item.text}
-                                />
-                            </List.Item>
-                        )
-                    } else if (item.studentSender) {
-                        return (
-                            <List.Item className={item.studentSender.id === userId ? 'message-right' : 'message-left'}>
-                                <List.Item.Meta
-                                    avatar={<Avatar>{item.studentSender.name.charAt(0)}</Avatar>}
-                                    title={item.studentSender.name}
-                                    description={item.text}
-                                />
-                            </List.Item>
-                        )
-                    }
-                }}
+                renderItem={(item) => (
+                  <List.Item className={item.sender.id === userId ? 'message-right' : 'message-left'}>
+                      <List.Item.Meta
+                        avatar={<Avatar>{item.sender.name.charAt(0)}</Avatar>}
+                        title={item.sender.name}
+                        description={item.text}
+                      />
+                  </List.Item>
+                )}
             />
             <div className="chat-input-area">
                 <Input
