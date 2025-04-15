@@ -12,7 +12,7 @@ interface DataSource {
     name: string
     group: string
     email: string
-    discipline: string
+    disciplines: string
 }
 
 const TeachersList: FC = () => {
@@ -91,7 +91,7 @@ const TeachersList: FC = () => {
         name: record.name,
         group: record.group?.name ?? '-',
         email: record.email,
-        discipline: record.discipline.name
+        disciplines: record.disciplines?.length ? record.disciplines?.map(d => d.name).join(', ') : '-'
     })) ?? []
 
     const columns = [
@@ -104,8 +104,8 @@ const TeachersList: FC = () => {
             dataIndex: 'group'
         },
         {
-            title: 'Предмет',
-            dataIndex: 'discipline'
+            title: 'Дисциплина',
+            dataIndex: 'disciplines'
         },
         ...(role === 'teacher' || role === 'admin' ? [
             {

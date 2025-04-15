@@ -97,7 +97,7 @@ const Chat: FC = () => {
             }, 10)
         } else {
             if (chat.messages.length) {
-                scrollToBottom('smooth')
+                scrollToBottom('auto')
             }
         }
     }, [chat.messages.length, scrollToBottom])

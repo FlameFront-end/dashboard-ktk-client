@@ -11,6 +11,7 @@ import {
 } from './Sidebar.styled'
 import { useAppSelector } from '@/hooks'
 import { useGetChatByGroupIdQuery } from '../../features/chat/api/chat.api.ts'
+import { useGetTeacherByIdQuery } from '../../features/teachers/api/teachers.api.ts'
 
 const Sidebar: FC = () => {
     const role = useAppSelector(state => state.auth.user.role)
@@ -23,6 +24,10 @@ const Sidebar: FC = () => {
 
     const { data: chat } = useGetChatByGroupIdQuery(groupId ?? '', {
         skip: !groupId
+    })
+
+    const { data: teacher } = useGetTeacherByIdQuery(userId ?? '', {
+        skip: role !== 'teacher'
     })
 
     const menuItems = [
@@ -103,7 +108,16 @@ const Sidebar: FC = () => {
                 path: pathsConfig.disciplines,
                 onClick: () => { navigate(pathsConfig.disciplines) }
             }
-        ] : [])
+        ] : []),
+
+        ...(role === 'teacher' && teacher?.teachingGroups
+          ? teacher.teachingGroups.filter((group) => group.id !== teacher.group?.id)?.map((group) => ({
+              label: `Чат группы ${group.name}`,
+              key: `chat-${group.chat.id}`,
+              path: pathsConfig.chat,
+              onClick: () => { navigate(pathsConfig.chat, { state: { id: group.chat.id } }) }
+          }))
+          : [])
     ]
 
     return (

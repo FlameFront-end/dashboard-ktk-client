@@ -36,14 +36,29 @@ declare namespace Collections {
         updatedAt: string
     }
 
+    interface TeachingGroup {
+        id: string,
+        name: string,
+        createdAt: string,
+        updatedAt: string,
+        chat: {
+            id: string,
+            groupId: string,
+            createdAt: string,
+            updatedAt: string
+        }
+    }
+
+
     interface Teacher {
         id: string
         name: string
         email: string
-        discipline: Discipline
+        disciplines: Discipline[]
         group: SimpleGroup | null
         createdAt: string
         updatedAt: string
+        teachingGroups: TeachingGroup[]
     }
 
     interface Student {

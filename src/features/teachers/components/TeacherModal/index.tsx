@@ -31,7 +31,7 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
             const formattedData = {
                 ...teacher,
                 group: teacher.group?.id,
-                discipline: teacher.discipline?.id
+                disciplines: teacher.disciplines?.map(d => d.id) ?? [],
             }
 
             form.setFieldsValue(formattedData)
@@ -39,6 +39,7 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
             form.resetFields()
         }
     }, [teacher])
+
 
     const handleSubmit = async (values: TeacherCreatePayload): Promise<void> => {
         try {
@@ -100,20 +101,21 @@ const TeacherModal: FC<Props> = ({ open, onClose, onSuccess, teacher }) => {
                     <Input type='email' placeholder="Введите email" />
                 </Form.Item>
                 <Form.Item
-                    name="discipline"
-                    label="Дисциплина"
-                    rules={[{ required: true, message: 'Введите дисциплину' }]}
+                  name="disciplinesIds"
+                  label="Дисциплины"
+                  rules={[{ required: true, message: 'Выберите хотя бы одну дисциплину' }]}
                 >
                     <Select
-                        placeholder="Выберите дисциплину"
-                        showSearch
-                        filterOption={(input, option) =>
-                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                        }
-                        options={disciplines?.map((discipline) => ({
-                            value: discipline.id,
-                            label: discipline.name
-                        }))}
+                      mode="multiple"
+                      placeholder="Выберите дисциплины"
+                      showSearch
+                      filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                      }
+                      options={disciplines?.map((discipline) => ({
+                          value: discipline.id,
+                          label: discipline.name
+                      }))}
                     />
                 </Form.Item>
 

@@ -2,8 +2,8 @@ import { api } from '@/core'
 
 export interface TeacherCreatePayload {
     name: string
-    discipline: string
     email: string
+    disciplinesIds: string[]
     group?: string
 }
 
@@ -11,7 +11,7 @@ export interface TeacherUpdatePayload {
     id: string
     name: string
     email: string
-    discipline: string
+    disciplinesIds: string[]
     group?: string
 }
 
