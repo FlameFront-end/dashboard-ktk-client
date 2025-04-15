@@ -4,6 +4,13 @@ interface Props {
     theme: 'dark' | 'light'
 }
 
+export const Separator = styled.div`
+    height: 1px;
+    margin: 5px 0;
+    border-radius: 100px;
+    background-color: #666;
+`;
+
 export const SidebarContainer = styled.div<Props>`
     position: sticky;
     bottom: 0;

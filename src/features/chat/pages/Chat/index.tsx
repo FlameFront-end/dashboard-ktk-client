@@ -77,7 +77,7 @@ const Chat: FC = () => {
             socket.emit('leaveRoom', { chatId })
             socket.disconnect()
         }
-    }, [])
+    }, [chatId])
 
     useEffect(() => {
         if (socketRef.current) {
@@ -100,7 +100,7 @@ const Chat: FC = () => {
                 scrollToBottom('auto')
             }
         }
-    }, [chat.messages.length, scrollToBottom])
+    }, [chat.messages.length, scrollToBottom, chatId])
 
 
     return (
