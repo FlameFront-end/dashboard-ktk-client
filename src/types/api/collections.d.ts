@@ -49,7 +49,6 @@ declare namespace Collections {
         }
     }
 
-
     interface Teacher {
         id: string
         name: string
