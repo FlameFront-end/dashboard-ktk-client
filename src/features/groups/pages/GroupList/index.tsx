@@ -68,7 +68,7 @@ const GroupList: FC = () => {
 
 	return (
 		<StyledGroupListWrapper
-			title='Все группы'
+			title='Группы'
 			headerRight={
 				<>
 					{role === 'admin' && (

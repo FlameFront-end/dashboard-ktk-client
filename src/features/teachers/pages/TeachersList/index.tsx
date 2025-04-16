@@ -140,7 +140,7 @@ const TeachersList: FC = () => {
 	]
 
 	return (
-		<StyledTeachersListWrapper title='Все преподаватели'>
+		<StyledTeachersListWrapper title='Преподаватели'>
 			<Space
 				direction='vertical'
 				style={{ marginBottom: 16, width: '100%' }}

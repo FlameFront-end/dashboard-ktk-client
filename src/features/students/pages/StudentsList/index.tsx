@@ -146,7 +146,7 @@ const StudentsList: FC = () => {
 	]
 
 	return (
-		<StyledStudentsListWrapper title='Все студенты'>
+		<StyledStudentsListWrapper title='Студенты'>
 			<Space
 				direction='vertical'
 				style={{ marginBottom: 16, width: '100%' }}
