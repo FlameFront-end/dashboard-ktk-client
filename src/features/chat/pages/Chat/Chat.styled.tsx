@@ -1,6 +1,7 @@
 import styled from 'styled-components'
+import { Card } from '@/kit'
 
-export const StyledChatWrapper = styled.div`
+export const StyledChatWrapper = styled(Card)`
     display: flex;
     flex-direction: column;
     height: calc(100vh - 120px);

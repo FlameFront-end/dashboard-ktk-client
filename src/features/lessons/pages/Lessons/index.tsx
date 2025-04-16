@@ -1,16 +1,17 @@
 import { type FC } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Card } from 'antd'
+import { Card, Typography } from 'antd'
 import LessonsList from '../../components/LessonsList'
 
 const Lessons: FC = () => {
-    const { state } = useLocation()
+	const { state } = useLocation()
 
-    return (
-        <Card>
-            <LessonsList groupId={state.id}/>
-        </Card>
-    )
+	return (
+		<Card>
+			<Typography.Title level={2}>Лекции</Typography.Title>
+			<LessonsList groupId={state.id} />
+		</Card>
+	)
 }
 
 export default Lessons
