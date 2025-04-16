@@ -2,58 +2,60 @@ import styled from 'styled-components'
 import { Card } from '@/kit'
 
 export const StyledChatWrapper = styled(Card)`
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 120px);
-    overflow-y: hidden !important;
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 120px);
 
-    .message-list {
-        flex: 1; 
-        overflow-y: auto; 
-        padding: 10px;
+	overflow-y: hidden !important;
 
-        -ms-overflow-style: none; 
-        scrollbar-width: none;
+	.message-list {
+		flex: 1;
+		overflow-y: auto;
+		padding: 10px;
 
-        &::-webkit-scrollbar {
-            display: none; 
-        }
-    }
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 
-    .message-left, .message-right {
-        margin-bottom: 10px;
-    }
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
 
-    .message-right {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
+	.message-left,
+	.message-right {
+		margin-bottom: 10px;
+	}
 
-    .message-right .ant-list-item-meta {
-        text-align: right;
-    }
+	.message-right {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
 
-    .message-right .ant-list-item-meta-avatar {
-        order: 1;
-        margin-right: 0; 
-        margin-left: 10px;
-    }
+	.message-right .ant-list-item-meta {
+		text-align: right;
+	}
 
-    .chat-input-area {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-    }
+	.message-right .ant-list-item-meta-avatar {
+		order: 1;
+		margin-right: 0;
+		margin-left: 10px;
+	}
 
-    .chat-input {
-        flex: 1;
-        margin-right: 10px;
-    }
-    
-    .ant-avatar {
-        font-size: 16px;  
-        color: white;
-        background-color: #1890ff; 
-    }
+	.chat-input-area {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+	}
+
+	.chat-input {
+		flex: 1;
+		margin-right: 10px;
+	}
+
+	.ant-avatar {
+		font-size: 16px;
+		color: white;
+		background-color: #1890ff;
+	}
 `

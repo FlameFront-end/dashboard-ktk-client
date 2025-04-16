@@ -2,7 +2,6 @@ import { type FC, type ReactNode, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
 	Button,
-	Card,
 	message,
 	Space,
 	Table,
@@ -12,10 +11,9 @@ import {
 } from 'antd'
 import { getDateFormat } from '@/utils'
 import ScheduleTable from '../../../schedule/components/ScheduleTable'
-import { Flex } from '@/kit'
+import { Flex, Card, ConfirmDelete } from '@/kit'
 import { pathsConfig } from '@/pathsConfig'
 import { EditOutlined } from '@ant-design/icons'
-import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import LessonsTable from '../../../lessons/components/LessonsList'
 import {
 	useDeleteGroupMutation,
@@ -181,19 +179,11 @@ const Group: FC = () => {
 	]
 
 	return (
-		<Card>
+		<Card title={`Группа: ${group?.name}`}>
 			<Flex justifyContent='space-between'>
-				<div>
-					<Typography.Title
-						level={2}
-						style={{ marginBottom: '10px' }}
-					>
-						Группа: {group?.name}
-					</Typography.Title>
-					<Typography.Title level={5} style={{ marginTop: '10px' }}>
-						Классный руководитель: {group?.teacher?.name ?? '-'}
-					</Typography.Title>
-				</div>
+				<Typography.Title level={5} style={{ marginTop: '10px' }}>
+					Классный руководитель: {group?.teacher?.name ?? '-'}
+				</Typography.Title>
 
 				<Flex alignItems='center'>
 					{(role === 'admin' || myId === group?.teacher?.id) && (

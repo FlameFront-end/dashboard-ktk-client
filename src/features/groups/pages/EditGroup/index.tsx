@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Form, Input, Select, Tabs, Button, message, Space, Card } from 'antd'
+import { Form, Input, Select, Tabs, Button, message, Space } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
-import { Flex } from '@/kit'
+import { Flex, Card } from '@/kit'
 import { useGetAllTeachersQuery } from '../../../teachers/api/teachers.api'
 import { useGetAllStudentsQuery } from '../../../students/api/students.api'
 import {
