@@ -187,7 +187,18 @@ const Sidebar: FC = () => {
 							}))
 					]
 				: []
-			: [])
+			: []),
+
+		<Separator key='separator-1' />,
+
+		{
+			label: 'Поддержка',
+			key: 'support',
+			path: pathsConfig.support,
+			onClick: () => {
+				navigate(pathsConfig.support)
+			}
+		}
 	]
 
 	return (

@@ -11,27 +11,29 @@ import { disciplinesRoutes } from '../../features/disciplines/routes/disciplines
 import { adminsRoutes } from '../../features/admins/routes/admins.routes.tsx'
 import { chatRoutes } from '../../features/chat/routes/chat.routes.tsx'
 import { performanceRoutes } from '../../features/performance/routes/performance.routes.tsx'
+import { supportRoutes } from '../../features/support/routes/support.routes.tsx'
 
 export const routesConfig = [
-    {
-        element: <RouterProtect />,
-        errorElement: <NotFound404 />,
-        children: [
-            {
-                path: pathsConfig.root,
-                element: <Layout />,
-                children: [
-                    ...groupsRoutes,
-                    ...studentsRoutes,
-                    ...teachersRoutes,
-                    ...lessonsRoutes,
-                    ...disciplinesRoutes,
-                    ...adminsRoutes,
-                    ...chatRoutes,
-                    ...performanceRoutes
-                ]
-            },
-            ...authRoutes
-        ]
-    }
+	{
+		element: <RouterProtect />,
+		errorElement: <NotFound404 />,
+		children: [
+			{
+				path: pathsConfig.root,
+				element: <Layout />,
+				children: [
+					...groupsRoutes,
+					...studentsRoutes,
+					...teachersRoutes,
+					...lessonsRoutes,
+					...disciplinesRoutes,
+					...adminsRoutes,
+					...chatRoutes,
+					...performanceRoutes,
+					...supportRoutes
+				]
+			},
+			...authRoutes
+		]
+	}
 ]

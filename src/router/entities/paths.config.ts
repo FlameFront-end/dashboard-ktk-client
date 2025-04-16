@@ -7,16 +7,18 @@ import { disciplinesPaths } from '../../features/disciplines/routes/disciplines.
 import { adminsPaths } from '../../features/admins/routes/admins.paths.ts'
 import { chatPaths } from '../../features/chat/routes/chat.paths.ts'
 import { performancePaths } from '../../features/performance/routes/performance.paths.ts'
+import { supportPaths } from '../../features/support/routes/support.paths.ts'
 
 export const pathsConfig = {
-    root: '/',
-    ...authPaths,
-    ...groupsPaths,
-    ...studentsPaths,
-    ...teachersPaths,
-    ...lessonsPaths,
-    ...disciplinesPaths,
-    ...adminsPaths,
-    ...chatPaths,
-    ...performancePaths
+	root: '/',
+	...authPaths,
+	...groupsPaths,
+	...studentsPaths,
+	...teachersPaths,
+	...lessonsPaths,
+	...disciplinesPaths,
+	...adminsPaths,
+	...chatPaths,
+	...performancePaths,
+	...supportPaths
 }
