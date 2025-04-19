@@ -1,12 +1,5 @@
 export { default as Card } from './Card'
-export { default as Curve } from './Curve'
 export { default as Flex } from './Flex'
-export { default as MainHeader } from './MainHeader'
-export { default as Tabs } from './Tabs'
-export { default as OnlineStatus } from './OnlineStatus'
-export { default as Avatar } from './Avatar'
-export { default as MySkeleton } from './MySkeleton'
-export { default as Audio } from './Audio'
 export { default as ConfirmDelete } from './ConfirmDelete'
 
 export * from './Buttons/index.ts'

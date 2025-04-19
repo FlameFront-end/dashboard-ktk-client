@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { Table, Input, Space, Button, message } from 'antd'
-import ConfirmDelete from '../../../kit/components/ConfirmDelete'
+import { ConfirmDelete } from '@/kit'
 import { EditOutlined } from '@ant-design/icons'
 import { StyledAdminsListWrapper } from './AdminsList.styled.tsx'
 import {

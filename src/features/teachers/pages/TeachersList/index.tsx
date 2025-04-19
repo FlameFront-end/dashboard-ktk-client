@@ -4,7 +4,7 @@ import {
 	useDeleteTeacherByIdMutation,
 	useGetAllTeachersQuery
 } from '../../api/teachers.api.ts'
-import ConfirmDelete from '../../../kit/components/ConfirmDelete'
+import { ConfirmDelete } from '@/kit'
 import { StyledTeachersListWrapper } from './TeachersList.styled.tsx'
 import TeacherModal from '../../components/TeacherModal'
 import { EditOutlined } from '@ant-design/icons'
