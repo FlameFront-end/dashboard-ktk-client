@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react'
+import { type FC, SetStateAction, useEffect, useState } from 'react'
 import { Button, Collapse, message, Typography } from 'antd'
 import ScheduleTable from '../../../schedule/components/ScheduleTable'
 import { Link, useNavigate } from 'react-router-dom'
@@ -10,6 +10,8 @@ import {
 } from '../../api/groups.api.ts'
 import { Flex, ConfirmDelete } from '@/kit'
 import { useAppSelector } from '@/hooks'
+
+const LOCAL_STORAGE_KEY = 'GROUP_LIST_OPEN_KEYS'
 
 const GroupList: FC = () => {
 	const navigate = useNavigate()
@@ -25,10 +27,29 @@ const GroupList: FC = () => {
 	}, [])
 
 	useEffect(() => {
-		if (groups?.[0]?.id) {
-			setActiveKeys([groups[0].id])
+		if (groups?.length) {
+			const savedKeys = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+			let validKeys: SetStateAction<string[]> = []
+
+			if (savedKeys) {
+				const parsed = JSON.parse(savedKeys) as string[]
+				validKeys = parsed.filter(id => groups.some(g => g.id === id))
+			}
+
+			if (validKeys.length) {
+				setActiveKeys(validKeys)
+			} else {
+				setActiveKeys([groups[0].id])
+			}
 		}
 	}, [groups])
+
+	useEffect(() => {
+		if (groups?.length) {
+			localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(activeKeys))
+		}
+	}, [activeKeys])
 
 	const groupByCourse = (
 		groups: Collections.Group[]
@@ -53,7 +74,7 @@ const GroupList: FC = () => {
 	)
 
 	const handleCollapseChange = (keys: string | string[]): void => {
-		setActiveKeys(typeof keys === 'string' ? [keys] : keys)
+		setActiveKeys(Array.isArray(keys) ? keys : [keys])
 	}
 
 	const handleDelete = async (id: string): Promise<void> => {
@@ -91,53 +112,52 @@ const GroupList: FC = () => {
 						</Typography.Title>
 						<Collapse
 							className='styled-collapse'
-							accordion
 							activeKey={activeKeys}
 							onChange={handleCollapseChange}
-						>
-							{courseGroups.map(group => (
-								<Collapse.Panel
-									header={group.name}
-									key={group.id}
-								>
-									<div className='collapse-top'>
-										<div className='left'>
-											<div>
-												Классный руководитель:{' '}
-												{group.teacher?.name ?? '-'}
+							items={courseGroups.map(group => ({
+								key: group.id,
+								label: group.name,
+								children: (
+									<>
+										<div className='collapse-top'>
+											<div className='left'>
+												<div>
+													Классный руководитель:{' '}
+													{group.teacher?.name ?? '-'}
+												</div>
+												{group.schedule && (
+													<div>Расписание</div>
+												)}
 											</div>
-											{group.schedule && (
-												<div>Расписание</div>
-											)}
+											<Flex alignItems='center'>
+												<Link
+													to={pathsConfig.group}
+													state={{ id: group.id }}
+												>
+													Страница группы
+												</Link>
+												{role === 'admin' && (
+													<ConfirmDelete
+														handleDelete={async () => {
+															await handleDelete(
+																group.id
+															)
+														}}
+														title='Вы уверены, что хотите удалить эту группу?'
+													/>
+												)}
+											</Flex>
 										</div>
-										<Flex alignItems='center'>
-											<Link
-												to={pathsConfig.group}
-												state={{ id: group.id }}
-											>
-												Страница группы
-											</Link>
-											{role === 'admin' && (
-												<ConfirmDelete
-													handleDelete={async () => {
-														await handleDelete(
-															group.id
-														)
-													}}
-													title='Вы уверены, что хотите удалить эту группу?'
-												/>
-											)}
-										</Flex>
-									</div>
 
-									{group.schedule && (
-										<ScheduleTable
-											schedule={group.schedule}
-										/>
-									)}
-								</Collapse.Panel>
-							))}
-						</Collapse>
+										{group.schedule && (
+											<ScheduleTable
+												schedule={group.schedule}
+											/>
+										)}
+									</>
+								)
+							}))}
+						/>
 					</div>
 				))}
 			</div>

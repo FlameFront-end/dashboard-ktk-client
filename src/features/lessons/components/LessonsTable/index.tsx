@@ -205,7 +205,7 @@ const LessonsTable: FC<Props> = ({
 		)
 	}
 
-	return <>{generateTableData(lessons)}</>
+	return generateTableData(lessons)
 }
 
 export default LessonsTable
