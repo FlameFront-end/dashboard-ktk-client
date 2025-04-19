@@ -20,7 +20,7 @@ const AdminsList: FC = () => {
 	const role = useAppSelector(state => state.auth.user.role)
 
 	const { data: admins, isLoading, refetch } = useGetAllAdminsQuery()
-	const [deletAadmin] = useDeleteAdminMutation()
+	const [deleteAadmin] = useDeleteAdminMutation()
 
 	const [searchText, setSearchText] = useState('')
 	const [filteredData, setFilteredData] = useState<Collections.Admin[]>([])
@@ -35,7 +35,7 @@ const AdminsList: FC = () => {
 
 	const handleDelete = async (id: string): Promise<void> => {
 		try {
-			await deletAadmin(id).unwrap()
+			await deleteAadmin(id).unwrap()
 			void message.success('Администратор удалён')
 			void refetch()
 		} catch (error) {
@@ -144,7 +144,7 @@ const AdminsList: FC = () => {
 								setIsModalVisible(true)
 							}}
 						>
-							Создать администатора
+							Создать администратора
 						</Button>
 					)}
 				</div>
