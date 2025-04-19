@@ -179,7 +179,7 @@ const Group: FC = () => {
 	]
 
 	return (
-		<Card title={`Группа: ${group?.name}`}>
+		<Card title={`Группа: ${group?.name ?? '-'}`}>
 			<Flex justifyContent='space-between'>
 				<Typography.Title level={5} style={{ marginTop: '10px' }}>
 					Классный руководитель: {group?.teacher?.name ?? '-'}

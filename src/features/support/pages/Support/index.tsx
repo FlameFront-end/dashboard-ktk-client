@@ -12,7 +12,7 @@ const Support: FC = () => {
 	const [form] = Form.useForm()
 	const [createTicket, { isLoading }] = useCreateTicketMutation()
 
-	const handleSubmit = (values: { message: string }) => {
+	const handleSubmit = (values: { message: string }): void => {
 		if (!userId || !role) return
 
 		void createTicket({ message: values.message, userId, userType: role })

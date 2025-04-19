@@ -1,4 +1,4 @@
-import { type FC, SetStateAction, useEffect, useState } from 'react'
+import { type FC, type SetStateAction, useEffect, useState } from 'react'
 import { Button, Collapse, message, Typography } from 'antd'
 import ScheduleTable from '../../../schedule/components/ScheduleTable'
 import { Link, useNavigate } from 'react-router-dom'

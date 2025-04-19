@@ -201,14 +201,14 @@ const CreateGroup: FC = () => {
 													subject.discipline?.id ||
 													null
 												}
-												onChange={value =>
+												onChange={value => {
 													handleScheduleChange(
 														en,
 														index,
 														'discipline',
 														value
 													)
-												}
+												}}
 												showSearch
 												filterOption={(input, option) =>
 													(option?.label ?? '')
@@ -231,14 +231,14 @@ const CreateGroup: FC = () => {
 												value={
 													subject.teacher?.id || null
 												}
-												onChange={value =>
+												onChange={value => {
 													handleScheduleChange(
 														en,
 														index,
 														'teacher',
 														value
 													)
-												}
+												}}
 												showSearch
 												disabled={!subject.discipline}
 												filterOption={(input, option) =>

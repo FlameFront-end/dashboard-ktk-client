@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Form, Input, Select, Tabs, Button, message, Space } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
@@ -14,6 +14,12 @@ import { daysOfWeek } from '@/constants'
 import { useGetAllDisciplinesQuery } from '../../../disciplines/api/disciplines.api.ts'
 import { pathsConfig } from '@/pathsConfig'
 import { useAppSelector } from '@/hooks'
+
+interface ScheduleItem {
+	discipline: any
+	teacher: any
+	cabinet: string
+}
 
 const UpdateGroup: FC = () => {
 	const { state } = useLocation()
@@ -55,10 +61,7 @@ const UpdateGroup: FC = () => {
 		}
 
 		if (group?.schedule) {
-			const initialSchedule: Record<
-				string,
-				Array<{ discipline: any; teacher: any; cabinet: string }>
-			> = {
+			const initialSchedule: Record<string, ScheduleItem[]> = {
 				monday: [],
 				tuesday: [],
 				wednesday: [],
@@ -67,7 +70,7 @@ const UpdateGroup: FC = () => {
 			}
 
 			daysOfWeek.forEach(({ en }) => {
-				// @ts-ignore
+				// @ts-expect-error: Suppressing TypeScript error due to potential undefined group.schedule
 				initialSchedule[en] = (group?.schedule[en] || []).map(
 					(subject: {
 						discipline: any
@@ -242,14 +245,14 @@ const UpdateGroup: FC = () => {
 													subject.discipline?.id ||
 													null
 												}
-												onChange={value =>
+												onChange={value => {
 													handleScheduleChange(
 														en,
 														index,
 														'discipline',
 														value
 													)
-												}
+												}}
 												showSearch
 												filterOption={(input, option) =>
 													(option?.label ?? '')
@@ -272,14 +275,14 @@ const UpdateGroup: FC = () => {
 												value={
 													subject.teacher?.id || null
 												}
-												onChange={value =>
+												onChange={value => {
 													handleScheduleChange(
 														en,
 														index,
 														'teacher',
 														value
 													)
-												}
+												}}
 												showSearch
 												disabled={!subject.discipline}
 												filterOption={(input, option) =>
@@ -301,29 +304,31 @@ const UpdateGroup: FC = () => {
 											<Input
 												placeholder='Кабинет'
 												value={subject.cabinet}
-												onChange={e =>
+												onChange={e => {
 													handleScheduleChange(
 														en,
 														index,
 														'cabinet',
 														e.target.value
 													)
-												}
+												}}
 											/>
 											<MinusCircleOutlined
-												onClick={() =>
+												onClick={() => {
 													handleRemoveSubject(
 														en,
 														index
 													)
-												}
+												}}
 											/>
 										</Space>
 									)
 								})}
 								<Button
 									type='dashed'
-									onClick={() => handleAddSubject(en)}
+									onClick={() => {
+										handleAddSubject(en)
+									}}
 									icon={<PlusOutlined />}
 									style={{ width: 'max-content' }}
 								>

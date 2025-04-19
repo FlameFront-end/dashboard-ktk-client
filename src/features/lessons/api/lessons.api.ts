@@ -3,6 +3,11 @@ import { api } from '@/core'
 interface CreateLessonPayload extends FormData {}
 interface EditLessonPayload extends FormData {}
 
+interface GetALlLessonsRequest {
+	groupId: string
+	disciplineId: string
+}
+
 export const lessonsApi = api.injectEndpoints({
 	endpoints: builder => ({
 		createLessons: builder.mutation<any, CreateLessonPayload>({
@@ -13,11 +18,14 @@ export const lessonsApi = api.injectEndpoints({
 			})
 		}),
 		editLesson: builder.mutation<any, EditLessonPayload>({
-			query: body => ({
-				url: `/lessons/${body.get('id')}`,
-				method: 'PATCH',
-				body
-			})
+			query: body => {
+				const id = body.get('id')
+				return {
+					url: `/lessons/${typeof id === 'string' ? id : ''}`,
+					method: 'PATCH',
+					body
+				}
+			}
 		}),
 		getLesson: builder.query<Collections.Lesson, string>({
 			query: lessonId => ({
@@ -26,7 +34,7 @@ export const lessonsApi = api.injectEndpoints({
 		}),
 		getALlLessons: builder.query<
 			Collections.Lesson[],
-			{ groupId: string; disciplineId: string }
+			GetALlLessonsRequest
 		>({
 			query: ({ groupId, disciplineId }) => ({
 				url: `/lessons/${groupId}/${disciplineId}`

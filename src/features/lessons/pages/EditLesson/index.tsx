@@ -15,7 +15,7 @@ interface LessonData {
 	title: string
 	description: string
 	homework: string
-	files?: (RcFile | UploadFile)[]
+	files?: Array<RcFile | UploadFile>
 }
 
 const EditLesson: FC = () => {
@@ -30,7 +30,7 @@ const EditLesson: FC = () => {
 
 	const { data: lesson, refetch: refetchLesson } = useGetLessonQuery(lessonId)
 	const [editLesson] = useEditLessonMutation()
-	const [fileList, setFileList] = useState<(RcFile | UploadFile)[]>([])
+	const [fileList, setFileList] = useState<Array<RcFile | UploadFile>>([])
 
 	useEffect(() => {
 		if (lesson) {
@@ -82,7 +82,7 @@ const EditLesson: FC = () => {
 			.unwrap()
 			.then(() => {
 				void message.success('Лекция успешно изменена')
-				refetchLesson()
+				void refetchLesson()
 				navigate(pathsConfig.group, {
 					state: { id: groupId, tab: '3' }
 				})
@@ -92,11 +92,11 @@ const EditLesson: FC = () => {
 			})
 	}
 
-	const onUploadChange = (info: UploadChangeParam) => {
+	const onUploadChange = (info: UploadChangeParam): void => {
 		setFileList(info.fileList)
 	}
 
-	const onRemove = (file: UploadFile) => {
+	const onRemove = (file: UploadFile): void => {
 		setFileList(prev => prev.filter(f => f.uid !== file.uid))
 	}
 
@@ -104,11 +104,11 @@ const EditLesson: FC = () => {
 		<Card>
 			<Button
 				type='dashed'
-				onClick={() =>
+				onClick={() => {
 					navigate(pathsConfig.group, {
 						state: { id: groupId, tab: '3' }
 					})
-				}
+				}}
 				style={{ marginBottom: 10 }}
 			>
 				Назад

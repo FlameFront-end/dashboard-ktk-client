@@ -1,4 +1,4 @@
-import { type FC, isValidElement, ReactElement } from 'react'
+import { type FC, isValidElement, type ReactElement } from 'react'
 import { useAuth } from '../../features/auth/hooks/useAuth.ts'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { pathsConfig } from '@/pathsConfig'
@@ -14,7 +14,7 @@ import { useAppSelector } from '@/hooks'
 import { useGetChatByGroupIdQuery } from '../../features/chat/api/chat.api.ts'
 import { useGetTeacherByIdQuery } from '../../features/teachers/api/teachers.api.ts'
 
-type MenuItem = {
+interface MenuItem {
 	label: string
 	key: string
 	path: string
@@ -22,7 +22,7 @@ type MenuItem = {
 	state?: { id: string }
 }
 
-type MenuItemsWithSeparators = (MenuItem | ReactElement)[]
+type MenuItemsWithSeparators = Array<MenuItem | ReactElement>
 
 const Sidebar: FC = () => {
 	const role = useAppSelector(state => state.auth.user.role)

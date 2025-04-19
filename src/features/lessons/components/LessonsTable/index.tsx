@@ -179,13 +179,13 @@ const LessonsTable: FC<Props> = ({
 						{(role === 'admin' || myId === teacherId) && (
 							<Button
 								icon={<EditOutlined />}
-								onClick={() =>
+								onClick={() => {
 									handleEditLesson(
 										date.format('YYYY-MM-DD'),
 										disciplineId,
 										lesson.id
 									)
-								}
+								}}
 							>
 								Редактировать
 							</Button>

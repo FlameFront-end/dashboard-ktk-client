@@ -19,13 +19,14 @@
         "react"
     ],
     "rules": {
-        "@typescript-eslint/indent": ["error", 4],
+        "@typescript-eslint/indent": "off",
         "@typescript-eslint/space-before-function-paren": "off",
         "no-console": "warn",
         "promise/always-return": "off",
         "multiline-ternary": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/no-invalid-void-type": "off"
+        "@typescript-eslint/no-invalid-void-type": "off",
+        "no-tabs": "off"
     },
     "settings": {
         "react": {

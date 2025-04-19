@@ -6,7 +6,7 @@ import { useForm } from 'antd/es/form/Form'
 import { pathsConfig } from '@/pathsConfig'
 import { useCreateLessonsMutation } from '../../api/lessons.api.ts'
 import { Card } from '@/kit'
-import { RcFile, UploadChangeParam } from 'antd/es/upload'
+import type { RcFile, UploadChangeParam } from 'antd/es/upload'
 
 interface LessonData {
 	title: string
@@ -24,8 +24,6 @@ const CreateLesson: FC = () => {
 	const disciplineId: string = state.disciplineId
 	const [createLesson] = useCreateLessonsMutation()
 	const [fileList, setFileList] = useState<RcFile[]>([])
-
-	console.log('fileList', fileList)
 
 	const onFinish = (values: LessonData): void => {
 		const formData = new FormData()
@@ -48,13 +46,12 @@ const CreateLesson: FC = () => {
 					state: { id: groupId, tab: '3' }
 				})
 			})
-			.catch(e => {
+			.catch(() => {
 				void message.error('Ошибка при создании лекции')
-				console.error(e)
 			})
 	}
 
-	const onUploadChange = (info: UploadChangeParam) => {
+	const onUploadChange = (info: UploadChangeParam): void => {
 		const files = info.fileList
 			.filter(file => !!file.originFileObj)
 			.map(file => file.originFileObj as RcFile)

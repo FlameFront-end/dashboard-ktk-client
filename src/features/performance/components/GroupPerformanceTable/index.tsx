@@ -209,7 +209,7 @@ const GroupPerformanceTable: FC<Props> = ({ groupId }) => {
 
 	return (
 		<Flex direction='column' gap={16}>
-			{!!lessons.filter(lesson => lesson.discipline).length ? (
+			{lessons.filter(lesson => lesson.discipline).length > 0 ? (
 				<>
 					<Flex gap={12} alignItems='center'>
 						<Button
