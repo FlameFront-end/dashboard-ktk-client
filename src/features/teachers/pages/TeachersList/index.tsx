@@ -166,15 +166,14 @@ const TeachersList: FC = () => {
 					)}
 				</div>
 			</Space>
-			<div className='table-wrapper'>
-				<Table<DataSource>
-					columns={columns}
-					dataSource={dataSource}
-					pagination={false}
-					loading={isLoading}
-					rowKey='id'
-				/>
-			</div>
+			<Table<DataSource>
+				columns={columns}
+				dataSource={dataSource}
+				pagination={false}
+				loading={isLoading}
+				rowKey='id'
+				scroll={{ x: 'max-content' }}
+			/>
 			<TeacherModal
 				open={isModalVisible}
 				onClose={handleModalClose}

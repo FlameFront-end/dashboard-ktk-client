@@ -139,7 +139,14 @@ const GroupPerformanceTable: FC<Props> = ({ groupId }) => {
 			return row
 		})
 
-		return <Table columns={columns} dataSource={data} pagination={false} />
+		return (
+			<Table
+				columns={columns}
+				dataSource={data}
+				pagination={false}
+				scroll={{ x: 'max-content' }}
+			/>
+		)
 	}
 
 	const nextWeek = (): void => {

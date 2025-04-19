@@ -1,5 +1,5 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import { Table, Input, Space, Button, message, Typography } from 'antd'
+import { Table, Input, Space, Button, message } from 'antd'
 import ConfirmDelete from '../../../kit/components/ConfirmDelete'
 import { EditOutlined } from '@ant-design/icons'
 import { StyledAdminsListWrapper } from './AdminsList.styled.tsx'
@@ -149,15 +149,14 @@ const AdminsList: FC = () => {
 					)}
 				</div>
 			</Space>
-			<div className='table-wrapper'>
-				<Table<DataSource>
-					columns={columns}
-					dataSource={dataSource}
-					pagination={false}
-					loading={isLoading}
-					rowKey='id'
-				/>
-			</div>
+			<Table<DataSource>
+				columns={columns}
+				dataSource={dataSource}
+				pagination={false}
+				loading={isLoading}
+				rowKey='id'
+				scroll={{ x: 'max-content' }}
+			/>
 			<AdminModal
 				open={isModalVisible}
 				admin={editingAdmin}

@@ -140,6 +140,7 @@ const Disciplines: FC = () => {
 				columns={columns}
 				dataSource={disciplines ?? []}
 				pagination={false}
+				scroll={{ x: 'max-content' }}
 			/>
 
 			<EditDisciplineModal
