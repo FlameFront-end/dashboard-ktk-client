@@ -19,13 +19,13 @@ export const lessonsApi = api.injectEndpoints({
 				body
 			})
 		}),
-		getLesson: builder.query<any, string>({
+		getLesson: builder.query<Collections.Lesson, string>({
 			query: lessonId => ({
 				url: `/lessons/${lessonId}`
 			})
 		}),
 		getALlLessons: builder.query<
-			any,
+			Collections.Lesson[],
 			{ groupId: string; disciplineId: string }
 		>({
 			query: ({ groupId, disciplineId }) => ({

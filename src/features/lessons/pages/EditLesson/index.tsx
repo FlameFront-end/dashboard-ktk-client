@@ -9,13 +9,13 @@ import {
 	useGetLessonQuery
 } from '../../api/lessons.api.ts'
 import { Card } from '@/kit'
-import type { RcFile, UploadChangeParam } from 'antd/es/upload'
+import type { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload'
 
 interface LessonData {
 	title: string
 	description: string
 	homework: string
-	files?: RcFile[]
+	files?: (RcFile | UploadFile)[]
 }
 
 const EditLesson: FC = () => {
@@ -28,10 +28,9 @@ const EditLesson: FC = () => {
 	const disciplineId: string = state.disciplineId
 	const lessonId: string = state.lessonId
 
-	const { data: lesson } = useGetLessonQuery(lessonId)
+	const { data: lesson, refetch: refetchLesson } = useGetLessonQuery(lessonId)
 	const [editLesson] = useEditLessonMutation()
-
-	const [fileList, setFileList] = useState<RcFile[]>([])
+	const [fileList, setFileList] = useState<(RcFile | UploadFile)[]>([])
 
 	useEffect(() => {
 		if (lesson) {
@@ -40,12 +39,25 @@ const EditLesson: FC = () => {
 				description: lesson.description,
 				homework: lesson.homework
 			})
+
+			if (lesson.files && lesson.files.length > 0) {
+				const filesFromServer = lesson.files
+					.filter((file: any) => file.url)
+					.map((file: any, index: number) => ({
+						uid: `-${index}`,
+						status: 'done' as const,
+						name: file.originalName || `file-${index}`,
+						url: file.url
+					}))
+				setFileList(filesFromServer)
+			} else {
+				setFileList([])
+			}
 		}
 	}, [lesson, form])
 
 	const onFinish = (values: LessonData): void => {
 		const formData = new FormData()
-
 		formData.append('id', lessonId)
 		formData.append('title', values.title)
 		formData.append('description', values.description || '')
@@ -54,14 +66,23 @@ const EditLesson: FC = () => {
 		formData.append('groupId', groupId)
 		formData.append('date', date)
 
+		const filesData: any[] = []
+
 		fileList.forEach(file => {
-			formData.append('files', file)
+			if ('url' in file && file.url) {
+				filesData.push({ originalName: file.name, url: file.url })
+			} else if ('originFileObj' in file && file.originFileObj) {
+				formData.append('files', file.originFileObj)
+			}
 		})
 
-		void editLesson(formData)
+		formData.append('files', JSON.stringify(filesData))
+
+		editLesson(formData)
 			.unwrap()
 			.then(() => {
 				void message.success('Лекция успешно изменена')
+				refetchLesson()
 				navigate(pathsConfig.group, {
 					state: { id: groupId, tab: '3' }
 				})
@@ -72,31 +93,28 @@ const EditLesson: FC = () => {
 	}
 
 	const onUploadChange = (info: UploadChangeParam) => {
-		const files = info.fileList
-			.filter(file => !!file.originFileObj)
-			.map(file => file.originFileObj as RcFile)
-		setFileList(files)
+		setFileList(info.fileList)
+	}
+
+	const onRemove = (file: UploadFile) => {
+		setFileList(prev => prev.filter(f => f.uid !== file.uid))
 	}
 
 	return (
-		<Card title='Редактирование лекции'>
+		<Card>
 			<Button
 				type='dashed'
-				onClick={() => {
+				onClick={() =>
 					navigate(pathsConfig.group, {
 						state: { id: groupId, tab: '3' }
 					})
-				}}
-				style={{ marginBottom: '10px' }}
+				}
+				style={{ marginBottom: 10 }}
 			>
 				Назад
 			</Button>
-			<Form
-				form={form}
-				layout='vertical'
-				onFinish={onFinish}
-				autoComplete='off'
-			>
+
+			<Form form={form} layout='vertical' onFinish={onFinish}>
 				<Form.Item
 					label='Тема лекции'
 					name='title'
@@ -116,9 +134,11 @@ const EditLesson: FC = () => {
 				<Form.Item label='Файлы'>
 					<Upload
 						multiple
+						name='files'
 						beforeUpload={() => false}
 						fileList={fileList}
 						onChange={onUploadChange}
+						onRemove={onRemove}
 						maxCount={10}
 					>
 						<Button icon={<UploadOutlined />}>Выбрать файлы</Button>
