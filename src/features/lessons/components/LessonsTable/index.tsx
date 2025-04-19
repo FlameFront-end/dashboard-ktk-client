@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import moment from 'moment'
-import { Button, message, Tag, Typography } from 'antd'
+import { Button, message, Table, Tag, Typography } from 'antd'
 import { pathsConfig } from '@/pathsConfig'
 import { useNavigate } from 'react-router-dom'
 import { Flex } from '@/kit'
@@ -8,7 +8,6 @@ import { EditOutlined } from '@ant-design/icons'
 import { useAppSelector } from '@/hooks'
 import { BACKEND_URL } from '@/constants'
 import ReactMarkdown from 'react-markdown'
-import { StyledLessonTable } from '../LessonsList/LessonList.styled.tsx'
 
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
 
@@ -197,10 +196,11 @@ const LessonsTable: FC<Props> = ({
 		}))
 
 		return (
-			<StyledLessonTable
+			<Table
 				columns={columns}
 				dataSource={[{ key: 'lessons' }]}
 				pagination={false}
+				scroll={{ x: 'max-content' }}
 			/>
 		)
 	}
