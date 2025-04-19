@@ -5,8 +5,6 @@ import { Flex } from '@/kit'
 import { useGetGroupQuery } from '../../../groups/api/groups.api.ts'
 import LessonsTable from '../LessonsTable'
 
-const { TabPane } = Tabs
-
 interface Props {
 	groupId: string
 }
@@ -26,7 +24,6 @@ const LessonsList: FC<Props> = ({ groupId }) => {
 	const today = moment()
 	const currentWeekStartInitial = today.startOf('isoWeek')
 	const maxWeekStart = today.startOf('isoWeek')
-
 	const [currentWeekStart, setCurrentWeekStart] = useState(
 		currentWeekStartInitial
 	)
@@ -56,9 +53,26 @@ const LessonsList: FC<Props> = ({ groupId }) => {
 		setCurrentWeekStart(currentWeekStart.clone().subtract(1, 'week'))
 	}
 
+	const tabsItems = Object.entries(lessonsByDiscipline).map(
+		([disciplineId, lessons]) => ({
+			key: disciplineId,
+			label: lessons[0]?.discipline?.name ?? 'Unnamed Discipline',
+			children: (
+				<LessonsTable
+					lessons={lessons}
+					disciplineId={disciplineId}
+					groupId={groupId}
+					currentWeekStart={currentWeekStart}
+					schedule={schedule}
+					teacherId={group?.teacher?.id}
+				/>
+			)
+		})
+	)
+
 	return (
 		<>
-			{Object.entries(lessonsByDiscipline).length ? (
+			{tabsItems.length ? (
 				<>
 					<div style={{ marginBottom: '16px' }}>
 						<Flex gap={12} alignItems='center'>
@@ -76,7 +90,6 @@ const LessonsList: FC<Props> = ({ groupId }) => {
 							>
 								Следующая неделя
 							</Button>
-
 							<span style={{ marginLeft: '16px' }}>
 								{currentWeekStart.format('DD.MM.YYYY')} -{' '}
 								{currentWeekStart
@@ -86,29 +99,10 @@ const LessonsList: FC<Props> = ({ groupId }) => {
 							</span>
 						</Flex>
 					</div>
-
-					<Tabs defaultActiveKey='1'>
-						{Object.entries(lessonsByDiscipline).map(
-							([disciplineId, lessons]) => (
-								<TabPane
-									tab={
-										lessons[0]?.discipline?.name ??
-										'Unnamed Discipline'
-									}
-									key={disciplineId}
-								>
-									<LessonsTable
-										lessons={lessons}
-										disciplineId={disciplineId}
-										groupId={groupId}
-										currentWeekStart={currentWeekStart}
-										schedule={schedule}
-										teacherId={group?.teacher?.id}
-									/>
-								</TabPane>
-							)
-						)}
-					</Tabs>
+					<Tabs
+						defaultActiveKey={tabsItems[0].key}
+						items={tabsItems}
+					/>
 				</>
 			) : (
 				<Empty
@@ -119,4 +113,5 @@ const LessonsList: FC<Props> = ({ groupId }) => {
 		</>
 	)
 }
+
 export default LessonsList

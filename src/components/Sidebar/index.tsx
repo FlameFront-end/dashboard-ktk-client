@@ -28,15 +28,12 @@ const Sidebar: FC = () => {
 	const role = useAppSelector(state => state.auth.user.role)
 	const groupId = useAppSelector(state => state.auth.user.groupId)
 	const userId = useAppSelector(state => state.auth.user.id)
-
 	const { logout } = useAuth()
 	const navigate = useNavigate()
 	const location = useLocation()
-
 	const { data: chat } = useGetChatByGroupIdQuery(groupId ?? '', {
 		skip: !groupId
 	})
-
 	const { data: teacher } = useGetTeacherByIdQuery(userId ?? '', {
 		skip: role !== 'teacher'
 	})
@@ -54,7 +51,6 @@ const Sidebar: FC = () => {
 					}
 				]
 			: []),
-
 		{
 			label: 'Преподаватели',
 			key: 'teachers_list',
@@ -71,7 +67,6 @@ const Sidebar: FC = () => {
 				navigate(pathsConfig.students_list)
 			}
 		},
-
 		...(role === 'teacher' || role === 'admin'
 			? [
 					{
@@ -84,7 +79,6 @@ const Sidebar: FC = () => {
 					}
 				]
 			: []),
-
 		...(role === 'admin'
 			? [
 					{
@@ -97,10 +91,9 @@ const Sidebar: FC = () => {
 					}
 				]
 			: []),
-
 		...(groupId
 			? [
-					<Separator key='separator-1' />,
+					<Separator key='separator-group' />,
 					{
 						label: 'Моя группа',
 						key: 'my_group',
@@ -130,7 +123,9 @@ const Sidebar: FC = () => {
 									onClick: () => {
 										navigate(
 											pathsConfig.individual_performance,
-											{ state: { id: userId } }
+											{
+												state: { id: userId }
+											}
 										)
 									}
 								}
@@ -148,7 +143,6 @@ const Sidebar: FC = () => {
 					}
 				]
 			: []),
-
 		...(chat?.id
 			? [
 					{
@@ -164,14 +158,12 @@ const Sidebar: FC = () => {
 					}
 				]
 			: []),
-
 		...(role === 'teacher' && teacher?.teachingGroups
 			? teacher.teachingGroups.filter(
 					group => group.id !== teacher.group?.id
 				).length > 0
 				? [
-						<Separator key='separator-2' />,
-
+						<Separator key='separator-teacher' />,
 						...teacher.teachingGroups
 							.filter(group => group.id !== teacher.group?.id)
 							.map(group => ({
@@ -188,9 +180,7 @@ const Sidebar: FC = () => {
 					]
 				: []
 			: []),
-
-		<Separator key='separator-1' />,
-
+		<Separator key='separator-support' />,
 		{
 			label: 'Поддержка',
 			key: 'support',
@@ -207,7 +197,6 @@ const Sidebar: FC = () => {
 				if (isValidElement(item)) {
 					return item
 				}
-
 				const itemMenuItem = item as MenuItem
 
 				const isActive = !itemMenuItem.key.includes('chat')
@@ -216,7 +205,7 @@ const Sidebar: FC = () => {
 
 				return (
 					<MenuItemContainer
-						key={item.key}
+						key={itemMenuItem.key}
 						onClick={itemMenuItem.onClick}
 						className={isActive ? 'active' : ''}
 					>

@@ -1,5 +1,6 @@
-import { type FC, useEffect } from 'react'
-import { Form, Input, Button, message, type UploadFile } from 'antd'
+import { type FC, useEffect, useState } from 'react'
+import { Form, Input, Button, message, Upload } from 'antd'
+import { UploadOutlined } from '@ant-design/icons'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'antd/es/form/Form'
 import { pathsConfig } from '@/pathsConfig'
@@ -8,12 +9,13 @@ import {
 	useGetLessonQuery
 } from '../../api/lessons.api.ts'
 import { Card } from '@/kit'
+import type { RcFile, UploadChangeParam } from 'antd/es/upload'
 
 interface LessonData {
 	title: string
 	description: string
 	homework: string
-	files?: UploadFile[]
+	files?: RcFile[]
 }
 
 const EditLesson: FC = () => {
@@ -29,30 +31,51 @@ const EditLesson: FC = () => {
 	const { data: lesson } = useGetLessonQuery(lessonId)
 	const [editLesson] = useEditLessonMutation()
 
+	const [fileList, setFileList] = useState<RcFile[]>([])
+
 	useEffect(() => {
-		form.setFieldsValue(lesson)
-	}, [lesson])
+		if (lesson) {
+			form.setFieldsValue({
+				title: lesson.title,
+				description: lesson.description,
+				homework: lesson.homework
+			})
+		}
+	}, [lesson, form])
 
 	const onFinish = (values: LessonData): void => {
-		const data = {
-			id: lessonId,
-			title: values.title,
-			description: values.description,
-			homework: values.homework,
-			disciplineId,
-			groupId,
-			date,
-			files: []
-		}
+		const formData = new FormData()
 
-		void editLesson(data)
+		formData.append('id', lessonId)
+		formData.append('title', values.title)
+		formData.append('description', values.description || '')
+		formData.append('homework', values.homework || '')
+		formData.append('disciplineId', disciplineId)
+		formData.append('groupId', groupId)
+		formData.append('date', date)
+
+		fileList.forEach(file => {
+			formData.append('files', file)
+		})
+
+		void editLesson(formData)
 			.unwrap()
 			.then(() => {
-				void message.success('Лекция успешно измененена')
+				void message.success('Лекция успешно изменена')
 				navigate(pathsConfig.group, {
 					state: { id: groupId, tab: '3' }
 				})
 			})
+			.catch(() => {
+				void message.error('Ошибка при изменении лекции')
+			})
+	}
+
+	const onUploadChange = (info: UploadChangeParam) => {
+		const files = info.fileList
+			.filter(file => !!file.originFileObj)
+			.map(file => file.originFileObj as RcFile)
+		setFileList(files)
 	}
 
 	return (
@@ -77,9 +100,7 @@ const EditLesson: FC = () => {
 				<Form.Item
 					label='Тема лекции'
 					name='title'
-					rules={[
-						{ required: true, message: 'Введите тему леакции' }
-					]}
+					rules={[{ required: true, message: 'Введите тему лекции' }]}
 				>
 					<Input />
 				</Form.Item>
@@ -92,19 +113,17 @@ const EditLesson: FC = () => {
 					<Input.TextArea />
 				</Form.Item>
 
-				{/* <Form.Item label="Файлы"> */}
-				{/*     <Upload */}
-				{/*         listType="picture-card" */}
-				{/*         fileList={fileList} */}
-				{/*         onChange={(file) => { */}
-				{/*             handleFileChange(file) */}
-				{/*         }} */}
-				{/*     > */}
-				{/*         <Button> */}
-				{/*             <UploadOutlined /> */}
-				{/*         </Button> */}
-				{/*     </Upload> */}
-				{/* </Form.Item> */}
+				<Form.Item label='Файлы'>
+					<Upload
+						multiple
+						beforeUpload={() => false}
+						fileList={fileList}
+						onChange={onUploadChange}
+						maxCount={10}
+					>
+						<Button icon={<UploadOutlined />}>Выбрать файлы</Button>
+					</Upload>
+				</Form.Item>
 
 				<Form.Item>
 					<Button type='primary' htmlType='submit'>
