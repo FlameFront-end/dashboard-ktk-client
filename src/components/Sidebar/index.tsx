@@ -22,7 +22,7 @@ interface MenuItem {
 	state?: { id: string }
 }
 
-type MenuItemsWithSeparators = Array<MenuItem | ReactElement>
+type MenuItemsWithSeparators = Array<MenuItem[] | MenuItem | ReactElement>
 
 const Sidebar: FC = () => {
 	const role = useAppSelector(state => state.auth.user.role)
@@ -163,20 +163,35 @@ const Sidebar: FC = () => {
 					group => group.id !== teacher.group?.id
 				).length > 0
 				? [
-						<Separator key='separator-teacher' />,
 						...teacher.teachingGroups
 							.filter(group => group.id !== teacher.group?.id)
-							.map(group => ({
-								label: `Чат группы ${group.name}`,
-								key: `chat-${group.chat.id}`,
-								path: pathsConfig.chat,
-								onClick: () => {
-									navigate(pathsConfig.chat, {
-										state: { id: group.chat.id }
-									})
+							.flatMap(group => [
+								<Separator
+									key={`separator-teacher-${group.id}`}
+								/>,
+								{
+									label: `Чат группы ${group.name}`,
+									key: `chat-${group.chat.id}`,
+									path: pathsConfig.chat,
+									onClick: () => {
+										navigate(pathsConfig.chat, {
+											state: { id: group.chat.id }
+										})
+									},
+									state: { id: group.chat.id }
 								},
-								state: { id: group.chat.id }
-							}))
+								{
+									label: `Лекции ${group.name}`,
+									key: `lessons-${group.chat.id}`,
+									path: pathsConfig.lessons,
+									onClick: () => {
+										navigate(pathsConfig.lessons, {
+											state: { id: group.id }
+										})
+									},
+									state: { id: group.id }
+								}
+							])
 					]
 				: []
 			: []),
@@ -197,21 +212,41 @@ const Sidebar: FC = () => {
 				if (isValidElement(item)) {
 					return item
 				}
-				const itemMenuItem = item as MenuItem
+				const itemMenuItem = item as MenuItem | MenuItem[]
 
-				const isActive = !itemMenuItem.key.includes('chat')
-					? location.pathname === itemMenuItem.path
-					: location.state?.id === itemMenuItem?.state?.id
+				if (Array.isArray(itemMenuItem)) {
+					return itemMenuItem.map(item => {
+						const isActive = !item.key.includes('chat')
+							? location.pathname === item.path
+							: location.state?.id === item?.state?.id
 
-				return (
-					<MenuItemContainer
-						key={itemMenuItem.key}
-						onClick={itemMenuItem.onClick}
-						className={isActive ? 'active' : ''}
-					>
-						<MenuItemLabel>{itemMenuItem.label}</MenuItemLabel>
-					</MenuItemContainer>
-				)
+						return (
+							<MenuItemContainer
+								key={item.key}
+								onClick={item.onClick}
+								className={isActive ? 'active' : ''}
+							>
+								<MenuItemLabel>{item.label}</MenuItemLabel>
+							</MenuItemContainer>
+						)
+					})
+				} else {
+					const isActive =
+						!itemMenuItem.key.includes('chat') &&
+						!itemMenuItem.key.includes('lessons')
+							? location.pathname === itemMenuItem.path
+							: location.state?.id === itemMenuItem?.state?.id
+
+					return (
+						<MenuItemContainer
+							key={itemMenuItem.key}
+							onClick={itemMenuItem.onClick}
+							className={isActive ? 'active' : ''}
+						>
+							<MenuItemLabel>{itemMenuItem.label}</MenuItemLabel>
+						</MenuItemContainer>
+					)
+				}
 			})}
 			<LogoutButton onClick={logout}>
 				<LogoutButtonLabel>Выход</LogoutButtonLabel>

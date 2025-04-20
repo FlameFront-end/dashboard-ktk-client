@@ -17,7 +17,7 @@ interface Props {
 	groupId: string
 	currentWeekStart: moment.Moment
 	schedule: any
-	teacherId: string | undefined
+	groupTeacherId: string | undefined
 }
 
 const LessonsTable: FC<Props> = ({
@@ -26,7 +26,7 @@ const LessonsTable: FC<Props> = ({
 	groupId,
 	currentWeekStart,
 	schedule,
-	teacherId
+	groupTeacherId
 }) => {
 	const navigate = useNavigate()
 	const role = useAppSelector(state => state.auth.user.role)
@@ -76,6 +76,8 @@ const LessonsTable: FC<Props> = ({
 	}, [groupId, disciplineId])
 
 	const generateTableData = (lessons: Collections.Lesson[]): ReactNode => {
+		const lessonTeacherId = lessons[0].teacher?.id
+
 		const uniqueDates = new Set<string>()
 		lessons.forEach(lesson => {
 			weekdays.forEach((day, index) => {
@@ -108,7 +110,9 @@ const LessonsTable: FC<Props> = ({
 				if (!lesson) {
 					return (
 						<>
-							{(role === 'admin' || myId === teacherId) && (
+							{(role === 'admin' ||
+								myId === groupTeacherId ||
+								myId === lessonTeacherId) && (
 								<Button
 									onClick={() => {
 										handleCreateLesson(
@@ -176,7 +180,9 @@ const LessonsTable: FC<Props> = ({
 							)}
 						</Flex>
 
-						{(role === 'admin' || myId === teacherId) && (
+						{(role === 'admin' ||
+							myId === groupTeacherId ||
+							myId === lessonTeacherId) && (
 							<Button
 								icon={<EditOutlined />}
 								onClick={() => {

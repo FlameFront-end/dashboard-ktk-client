@@ -4,6 +4,7 @@ import moment from 'moment/moment'
 import { Flex } from '@/kit'
 import { useGetGroupQuery } from '../../../groups/api/groups.api.ts'
 import LessonsTable from '../LessonsTable'
+import { useAppSelector } from '@/hooks'
 
 interface Props {
 	groupId: string
@@ -11,6 +12,9 @@ interface Props {
 }
 
 const LessonsList: FC<Props> = ({ groupId, tab }) => {
+	const role = useAppSelector(state => state.auth.user.role)
+	const myId = useAppSelector(state => state.auth.user.id)
+
 	const { data: group } = useGetGroupQuery(groupId)
 
 	const schedule = group?.schedule ?? {
@@ -54,8 +58,14 @@ const LessonsList: FC<Props> = ({ groupId, tab }) => {
 		setCurrentWeekStart(currentWeekStart.clone().subtract(1, 'week'))
 	}
 
-	const tabsItems = Object.entries(lessonsByDiscipline).map(
-		([disciplineId, lessons]) => ({
+	const tabsItems = Object.entries(lessonsByDiscipline)
+		.filter(([_, lessons]) => {
+			if (role === 'teacher' && myId !== group?.teacher?.id) {
+				return lessons[0]?.teacher?.id === myId
+			}
+			return true
+		})
+		.map(([disciplineId, lessons]) => ({
 			key: disciplineId,
 			label: lessons[0]?.discipline?.name ?? 'Unnamed Discipline',
 			children: (
@@ -65,11 +75,10 @@ const LessonsList: FC<Props> = ({ groupId, tab }) => {
 					groupId={groupId}
 					currentWeekStart={currentWeekStart}
 					schedule={schedule}
-					teacherId={group?.teacher?.id}
+					groupTeacherId={group?.teacher?.id}
 				/>
 			)
-		})
-	)
+		}))
 
 	return (
 		<>
