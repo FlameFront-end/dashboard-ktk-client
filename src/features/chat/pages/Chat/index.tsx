@@ -2,10 +2,10 @@ import {
 	useState,
 	useEffect,
 	useRef,
+	useCallback,
 	type FC,
 	type ChangeEvent,
-	type MutableRefObject,
-	useCallback
+	type MutableRefObject
 } from 'react'
 import { Input, List, Avatar, Button } from 'antd'
 import { io, type Socket } from 'socket.io-client'
