@@ -8,6 +8,7 @@ import { adminsPaths } from '../../features/admins/routes/admins.paths.ts'
 import { chatPaths } from '../../features/chat/routes/chat.paths.ts'
 import { performancePaths } from '../../features/performance/routes/performance.paths.ts'
 import { supportPaths } from '../../features/support/routes/support.paths.ts'
+import { classRegisterPaths } from '../../features/classRegister/routes/classRegister.paths.ts'
 
 export const pathsConfig = {
 	root: '/',
@@ -20,5 +21,6 @@ export const pathsConfig = {
 	...adminsPaths,
 	...chatPaths,
 	...performancePaths,
-	...supportPaths
+	...supportPaths,
+	...classRegisterPaths
 }

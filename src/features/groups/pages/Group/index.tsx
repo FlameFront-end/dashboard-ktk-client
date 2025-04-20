@@ -21,7 +21,7 @@ import {
 } from '../../api/groups.api.ts'
 import { useAppSelector } from '@/hooks'
 import { useDeleteStudentFromGroupMutation } from '../../../students/api/students.api.ts'
-import GroupPerformanceTable from '../../../performance/components/GroupPerformanceTable'
+import ClassRegisterTable from '../../../classRegister/components/ClassRegisterTable'
 
 interface DataSourceStudents {
 	id: string
@@ -145,8 +145,8 @@ const Group: FC = () => {
 		},
 		{
 			key: '2',
-			label: 'Успеваемость',
-			children: <GroupPerformanceTable groupId={groupId} />
+			label: 'Классный журнал',
+			children: <ClassRegisterTable groupId={groupId} />
 		},
 		{
 			key: '3',

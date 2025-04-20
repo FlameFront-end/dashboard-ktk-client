@@ -7,9 +7,10 @@ import LessonsTable from '../LessonsTable'
 
 interface Props {
 	groupId: string
+	tab?: string | undefined
 }
 
-const LessonsList: FC<Props> = ({ groupId }) => {
+const LessonsList: FC<Props> = ({ groupId, tab }) => {
 	const { data: group } = useGetGroupQuery(groupId)
 
 	const schedule = group?.schedule ?? {
@@ -100,7 +101,7 @@ const LessonsList: FC<Props> = ({ groupId }) => {
 						</Flex>
 					</div>
 					<Tabs
-						defaultActiveKey={tabsItems[0].key}
+						defaultActiveKey={tab ?? tabsItems[0].key}
 						items={tabsItems}
 					/>
 				</>

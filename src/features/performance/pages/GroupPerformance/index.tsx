@@ -1,6 +1,5 @@
 import { type FC } from 'react'
 import { useLocation } from 'react-router-dom'
-import GroupPerformanceTable from '../../components/GroupPerformanceTable'
 import { Card } from '@/kit'
 
 const GroupPerformance: FC = () => {
@@ -8,7 +7,7 @@ const GroupPerformance: FC = () => {
 
 	return (
 		<Card title='Успеваемость группы'>
-			<GroupPerformanceTable groupId={state.id} />
+			Графики успеваемости каждого студента группы {state.id}
 		</Card>
 	)
 }

@@ -12,6 +12,7 @@ import { adminsRoutes } from '../../features/admins/routes/admins.routes.tsx'
 import { chatRoutes } from '../../features/chat/routes/chat.routes.tsx'
 import { performanceRoutes } from '../../features/performance/routes/performance.routes.tsx'
 import { supportRoutes } from '../../features/support/routes/support.routes.tsx'
+import { classRegisterRoutes } from '../../features/classRegister/routes/classRegister.routes.tsx'
 
 export const routesConfig = [
 	{
@@ -30,7 +31,8 @@ export const routesConfig = [
 					...adminsRoutes,
 					...chatRoutes,
 					...performanceRoutes,
-					...supportRoutes
+					...supportRoutes,
+					...classRegisterRoutes
 				]
 			},
 			...authRoutes

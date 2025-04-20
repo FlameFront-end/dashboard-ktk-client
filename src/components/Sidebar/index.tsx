@@ -105,11 +105,11 @@ const Sidebar: FC = () => {
 						}
 					},
 					{
-						label: 'Успеваемость группы',
-						key: 'my_group_performance',
-						path: pathsConfig.group_performance,
+						label: 'Классный журнал',
+						key: 'class_register',
+						path: pathsConfig.class_register,
 						onClick: () => {
-							navigate(pathsConfig.group_performance, {
+							navigate(pathsConfig.class_register, {
 								state: { id: groupId }
 							})
 						}

@@ -8,7 +8,7 @@ const Lessons: FC = () => {
 
 	return (
 		<Card title='Лекции'>
-			<LessonsList groupId={state.id} />
+			<LessonsList groupId={state.id} tab={state.tab} />
 		</Card>
 	)
 }

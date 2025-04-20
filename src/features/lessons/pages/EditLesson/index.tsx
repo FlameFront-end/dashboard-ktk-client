@@ -105,8 +105,8 @@ const EditLesson: FC = () => {
 			<Button
 				type='dashed'
 				onClick={() => {
-					navigate(pathsConfig.group, {
-						state: { id: groupId, tab: '3' }
+					navigate(pathsConfig.lessons, {
+						state: { id: groupId, tab: disciplineId }
 					})
 				}}
 				style={{ marginBottom: 10 }}
